@@ -14,11 +14,12 @@ const options = {
 
 
 const req = https.request(options, (res) => {
-  console.log(res,"\n\n\n");
-
-  res.on('data', (d) => {
-    console.log("\n\n\n",d);
-  });
+  //console.log('statusCode:', res.statusCode);
+  //console.log('headers:', res.headers);
+  console.log('data:', res.data);
+  // res.on('data', (d) => {
+  //   process.stdout.write(d);
+  // });
 });
 
 req.on('error', (e) => {
