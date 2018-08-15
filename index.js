@@ -3,7 +3,8 @@
 const https = require('https'),
 	token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc",
 	host = "api.telegram.org",
-	path = "/bot" + token + "/getUpdates";
+	path = "/bot" + token + "/getUpdates",
+
 
 const options = {
   hostname: host,
@@ -12,16 +13,18 @@ const options = {
   method: 'GET'
 };
 
-
-const req = https.request(options, (res) => {
-  //console.log('statusCode:', res.statusCode);
-  //console.log('headers:', res.headers);
-  res.on('data', (d) => {
-    process.stdout.write(d);
+  var request = https.request(options, (res) => {
+    //console.log('statusCode:', res.statusCode);
+    //console.log('headers:', res.headers);
+    res.on('data', (data) => {
+      process.stdout.write(data);
+      console.log(data.ok);
+    });
   });
-});
 
-req.on('error', (e) => {
-  console.error(e);
-});
-req.end();
+  req.on('error', (e) => {
+    console.error(e);
+  });
+  req.end();
+
+
