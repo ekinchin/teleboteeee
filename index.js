@@ -3,7 +3,7 @@
 const https = require('https'),
 	token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc",
 	host = "api.telegram.org",
-	path = "/bot" + token + "/getUpdates",
+	path = "/bot" + token + "/getUpdates";
 
 
 const options = {
@@ -22,9 +22,9 @@ const options = {
     });
   });
 
-  req.on('error', (e) => {
+  request.on('error', (e) => {
     console.error(e);
   });
-  req.end();
+  request.end();
 
 
