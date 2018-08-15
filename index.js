@@ -20,11 +20,11 @@ const options = {
       var answer=JSON.parse(data)
       console.log(answer);
       console.log('\n');
-      console.log(answer.result.from);
+      console.log(answer.result[0].message.from);
       console.log('\n');
-      console.log(answer.result.chat);
+      console.log(answer.result[0].message.chat);
       console.log('\n');
-      console.log(answer.result.entities);
+      console.log(answer.result[0].message.entities);
   
     });
   });
