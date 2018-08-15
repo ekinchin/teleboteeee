@@ -18,6 +18,8 @@ const options = {
     //console.log('headers:', res.headers);
     res.on('data', (data) => {
       var answer=JSON.parse(data)
+      console.log(answer);
+      console.log('\n');
       console.log(answer.result.from);
       console.log('\n');
       console.log(answer.result.chat);
