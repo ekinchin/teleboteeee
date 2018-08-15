@@ -18,7 +18,12 @@ const options = {
     //console.log('headers:', res.headers);
     res.on('data', (data) => {
       var answer=JSON.parse(data)
-      console.log(answer.ok, '\n',answer.result);
+      console.log(answer.result.from);
+      console.log('\n');
+      console.log(answer.result.chat);
+      console.log('\n');
+      console.log(answer.result.entities);
+  
     });
   });
 
@@ -28,3 +33,16 @@ const options = {
   request.end();
 
 
+/*
+ответ на /getUpdates - JSON
+{ok, message}
+message -> {
+  from, 'объект'
+  chat, 'объект'
+  date, 'дата'
+  text, (строка)
+  entities (array)
+}
+
+
+*/
