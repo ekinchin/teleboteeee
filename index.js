@@ -18,7 +18,8 @@ const options = {
     //console.log('headers:', res.headers);
     res.on('data', (data) => {
       process.stdout.write(data);
-      console.log( JSON.parse(data));
+      answer=JSON.parse(data)
+      console.log(answer.ok, '\n',answer.result);
     });
   });
 
