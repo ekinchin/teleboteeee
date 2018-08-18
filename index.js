@@ -18,7 +18,7 @@ var request = https.request(options, (res) => {
   res.on('data', (data) => {
     var answer=JSON.parse(data)
     console.log(answer);
-    if(answer.result!=undefined){      
+    if(answer.result.length!=0){      
       console.log('\n');
       console.log(answer.result[0].message.from);
       console.log('\n');
