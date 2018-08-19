@@ -1,6 +1,6 @@
 'use strict';
 
-// var fs = require('fs');
+var fs = require('fs');
 var https = require('https'),
   token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc",
   host = "api.telegram.org",
