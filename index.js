@@ -1,6 +1,6 @@
 'use strict';
 
-var fs = require('fs');
+// var fs = require('fs');
 var https = require('https'),
   token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc",
   host = "api.telegram.org",
@@ -8,10 +8,11 @@ var https = require('https'),
 
 var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 var setwebhook="/bot"+token+"setwebhook?url="+webHookPath;
-const serverOptions = {
-  key: fs.readFileSync('public.pem'),
-  cert: fs.readFileSync('private.pem')
-}
+
+// const serverOptions = {
+//   key: fs.readFileSync('public.pem'),
+//   cert: fs.readFileSync('private.pem')
+// }
 
 const options = {
   hostname: host,
