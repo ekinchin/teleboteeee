@@ -27,8 +27,9 @@ var request = https.request(options, (res) => {
     console.log(answer);
   });
 });
-
-request.on('error', (e) => {
-  console.error(e);
-});
 request.end();
+
+server = https.createServer(options);
+server.on('request',(request, result)=>{
+  console.log(parseJSON(request));
+})
