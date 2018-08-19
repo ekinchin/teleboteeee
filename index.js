@@ -32,6 +32,7 @@ request.end();
 var server = https.createServer(serverOptions);
 server.listen();
 server.on('request',(request, result)=>{
+  result.end("hello");
   console.log(request);
   console.log(parseJSON(request));
 })
