@@ -7,7 +7,7 @@ var https = require('https'),
   path = "/bot" + token + "/getUpdates";
 
 var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
-var setwebhook="/bot"+token+"setwebhook?url="+webHookPath;
+var setwebhook="/bot"+token+"/setwebhook?url="+webHookPath;
 
 // const serverOptions = {
 //   key: fs.readFileSync('public.pem'),
