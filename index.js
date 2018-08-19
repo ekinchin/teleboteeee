@@ -10,8 +10,8 @@ var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_
 var setwebhook="/bot"+token+"/setwebhook?url="+webHookPath;
 
 const serverOptions = {
-  key: fs.readFileSync('public.pem'),
-  cert: fs.readFileSync('private.pem')
+  key: fs.readFileSync('./private.key'),
+  cert: fs.readFileSync('./public.pem')
 }
 
 const options = {
@@ -30,7 +30,8 @@ var request = https.request(options, (res) => {
 request.end();
 
 var server = https.createServer(serverOptions);
-serve.listen();
+server.listen();
 server.on('request',(request, result)=>{
+  console.log(request);
   console.log(parseJSON(request));
 })
