@@ -3,6 +3,7 @@
 var port = process.env.PORT;
 var fs = require('fs');
 var http = require('http');
+var https = require('https');
 var token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 var telegram = "api.telegram.org";
 var path = "/bot" + token + "/getUpdates";
@@ -17,10 +18,11 @@ const options = {
   method: 'GET'
 };
 
-var request = http.request(options, (res) => {
+var request = https.request(options, (res) => {
   res.on('data', (data) => {
     var answer=JSON.parse(data)
     console.log(answer);
+    (answer.ok==true)?console.log("URAAAA"):console.log('FAIL');
   });
 });
 request.end();
