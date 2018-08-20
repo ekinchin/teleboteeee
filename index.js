@@ -21,18 +21,17 @@ const options = {
   method: 'GET'
 };
 
-var request = https.request(options, (res) => {
-  res.on('data', (data) => {
-    var answer=JSON.parse(data)
-    console.log(answer);
-  });
-});
-request.end();
+// var request = https.request(options, (res) => {
+//   res.on('data', (data) => {
+//     var answer=JSON.parse(data)
+//     console.log(answer);
+//   });
+// });
+// request.end();
 
 var server = https.createServer(serverOptions);
-server.listen();
-server.on('request',(request, result)=>{
-  result.end("hello");
-  console.log(request);
-  console.log(parseJSON(request));
-})
+server.listen(8000);
+server.on('request',(req, res) => {
+  console.log(req);
+  res.end('hello world\n');
+});
