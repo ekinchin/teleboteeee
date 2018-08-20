@@ -1,5 +1,6 @@
 'use strict';
 
+var port = process.env.PORT;
 var fs = require('fs');
 var https = require('https'),
   token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc",
@@ -30,7 +31,7 @@ const options = {
 // request.end();
 
 var server = https.createServer(serverOptions);
-server.listen(8000);
+server.listen(port);
 server.on('request',(req, res) => {
   console.log(req);
   res.end('hello world\n');
