@@ -11,7 +11,7 @@ var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_
 var setwebhook="/bot"+token+"/setwebhook?url="+webHookPath;
 
 const options = {
-  hostname: host,
+  hostname: telegram,
   port: 443,
   path: setwebhook,
   method: 'GET'
