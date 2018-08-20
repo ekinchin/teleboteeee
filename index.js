@@ -2,18 +2,13 @@
 
 var port = process.env.PORT;
 var fs = require('fs');
-var https = require('http'),
-  token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc",
-  host = "api.telegram.org",
-  path = "/bot" + token + "/getUpdates";
+var https = require('https');
+var token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
+var telegram = "api.telegram.org";
+var path = "/bot" + token + "/getUpdates";
 
 var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 var setwebhook="/bot"+token+"/setwebhook?url="+webHookPath;
-
-const serverOptions = {
-  key: fs.readFileSync('./private.key'),
-  cert: fs.readFileSync('./public.pem')
-}
 
 const options = {
   hostname: host,
@@ -22,13 +17,13 @@ const options = {
   method: 'GET'
 };
 
-// var request = https.request(options, (res) => {
-//   res.on('data', (data) => {
-//     var answer=JSON.parse(data)
-//     console.log(answer);
-//   });
-// });
-// request.end();
+var request = https.request(options, (res) => {
+  res.on('data', (data) => {
+    var answer=JSON.parse(data)
+    console.log(answer);
+  });
+});
+request.end();
 
 var server = https.createServer();
 server.listen(port);
