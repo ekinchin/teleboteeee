@@ -37,7 +37,7 @@ function Server(){
  server.on('request',(req, res) => {
   console.log(req);
   res.end('hello world\n');
-};
+  });
 }
 
 var prmSetWebHook = setWebHook(telegram, token, webHookPath, CMD.setWebHook);
