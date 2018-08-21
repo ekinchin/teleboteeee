@@ -12,7 +12,7 @@ var CMD = {
 };
 
 function setWebHook(telegram, token, webhookpath, command) {
-  return new Promise((resole,reject)=>{
+  return new Promise((resolve,reject)=>{
     console.log("Set WebHook");
     var options = {
       hostname: telegram,
