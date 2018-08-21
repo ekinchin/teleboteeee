@@ -42,11 +42,11 @@ function Server(){
       console.log("Telegram request");
     }
     req.on('data',(data)=>{
-      data=JSON.parse(data);
-      console.log(data,'\n');
-      console.log(data.message.chat.id);
-      console.log(data.message.text);
-      console.log(data.message.entities);
+      var request=JSON.parse(data);
+      console.log(request,'\n');
+      console.log(request.message.chat.id);
+      console.log(request.message.text);
+      console.log(request.message.entities);
     });
     res.end();
   });
