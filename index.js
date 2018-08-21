@@ -32,11 +32,12 @@ function setWebHook(telegram, token, webhookpath, command) {
 }
 
 function Server(){
-   var server = http.createServer();
-  server.listen(port);
-  server.on('request',(req, res) => {
-    console.log(req);
-    res.end('hello world\n');
+ var server = http.createServer();
+ server.listen(port);
+ server.on('request',(req, res) => {
+  console.log(req);
+  res.end('hello world\n');
+};
 }
 
 var prmSetWebHook = setWebHook(telegram, token, webHookPath, CMD.setWebHook);
@@ -44,4 +45,4 @@ prmSetWebHook.then(Server,
   (error)=>{
     console.log("ERROR",error);
   }
-);
+  );
