@@ -40,12 +40,12 @@ function Server(){
     console.log('WebHook request headers: %j', req.headers);
     if(req.url==('/'+token)){
       console.log("Telegram request");
-      req.on('data',(data)=>{
-        data=JSON.parse(data);
-        console.log(data.message.chat.id);
-        console.log(data.message.chat.text);
-      }); 
     }
+    req.on('data',(data)=>{
+      data=JSON.parse(data);
+      console.log(data.message.chat.id);
+      console.log(data.message.chat.text);
+    });
     res.end();
   });
 }
