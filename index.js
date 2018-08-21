@@ -54,11 +54,10 @@ function Server(){
       console.log(request.message.entities);
 
     res.setHeader('Content-Type', 'application/json');
-    res.send(
+    res.end(
       JSON.stringify({"method": "sendMessage", "text": "hello", "chat_id":request.message.chat.id
         }));
     });
-    res.end('hello');
   });
 }
 
