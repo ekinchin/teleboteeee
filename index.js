@@ -22,7 +22,7 @@ function setWebHook(telegram, token, webhookpath, command) {
     };
     var request = https.request(options, (res) => {
       res.on('data', (data) => {
-        result=JSON.parse(data).result;
+        var result=JSON.parse(data).result;
         console.log(result);
         (result==true)?resolve(result):reject(result);
       });
