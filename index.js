@@ -38,12 +38,15 @@ function Server(){
   server.on('request',(req, res) => {
     console.log('WebHook request URL: %s', req.url);
     console.log('WebHook request headers: %j', req.headers);
-    console.log(req.body);
-    req.on('data',(data)=>{
-      console.log(data);
-        console.log(JSON.parse(data));
-    });
-    res.end('hello world\n');
+    if(req.url==('/'+token)){
+      console.log("Telegram request");
+      req.on('data',(data)=>{
+        data=JSON.parse(data);
+        console.log(data.message.chat.id);
+        console.log(data.message.chat.text);
+      }); 
+    }
+    res.end();
   });
 }
 
