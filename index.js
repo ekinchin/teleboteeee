@@ -32,8 +32,9 @@ function setWebHook(telegram, token, webhookpath, command) {
 }
 
 function Server(){
+  console.log("OK, starting server....")
  var server = http.createServer();
- server.listen(port);
+ server.listen(process.env.PORT);
  server.on('request',(req, res) => {
   console.log(req);
   res.end('hello world\n');
