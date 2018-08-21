@@ -15,16 +15,17 @@ var CMD = {
 
 function setWebHook(telegram, token, webhookpath, command) {
   return new Promise((resole,reject)=>{
+    console.log("Set WebHook");
     var options = {
       hostname: telegram,
       port: 443,
       path:"/bot"+token+"/"+command+"?url="+webhookpath,
       method: 'GET'
     };
-    console.log(options);
     var request = https.request(options, (res) => {
       res.on('data', (data) => {
-        result=JSON.parse(data).result
+        result=JSON.parse(data).result;
+        console.log(result);
         (result==true)?resolve(result):reject(result);
       });
     });
