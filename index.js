@@ -33,13 +33,13 @@ function setWebHook(telegram, token, webhookpath, command) {
 
 function Server(){
   console.log("OK, starting server....")
- var server = http.createServer();
- server.listen(process.env.PORT);
- server.on('request',(req, res) => {
+  var server = http.createServer();
+  server.listen(process.env.PORT);
+  server.on('request',(req, res) => {
     console.log('WebHook request URL: %s', req.url);
     console.log('WebHook request headers: %j', req.headers);
-    console.log(JSON.parse(body.toString()));
-  res.end('hello world\n');
+    console.log(JSON.parse(req.body.toString()));
+    res.end('hello world\n');
   });
 }
 
