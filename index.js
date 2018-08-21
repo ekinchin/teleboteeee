@@ -36,19 +36,18 @@ function Server(){
   var server = http.createServer();
   server.listen(process.env.PORT);
   server.on('request',(req, res) => {
-    console.log('WebHook request URL: %s', req.url);
-    console.log('WebHook request headers: %j', req.headers);
     if(req.url==('/'+token)){
       console.log("Telegram request");
     }
     req.on('data',(data)=>{
+      console.log("hello");
       var request=JSON.parse(data);
       console.log(request,'\n');
       console.log(request.message.chat.id);
       console.log(request.message.text);
       console.log(request.message.entities);
     });
-    res.end();
+    res.end('hello');
   });
 }
 
