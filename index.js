@@ -5,9 +5,7 @@ var https = require('https');
 
 var token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 var telegram = "api.telegram.org";
-
 var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
-
 var CMD = {
   setWebHook:"setwebhook",
   getUpdates:"getUpdates"
@@ -29,6 +27,7 @@ function setWebHook(telegram, token, webhookpath, command) {
         (result==true)?resolve(result):reject(result);
       });
     });
+    request.end();
   });
 }
 
