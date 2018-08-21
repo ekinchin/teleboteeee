@@ -36,7 +36,9 @@ function Server(){
  var server = http.createServer();
  server.listen(process.env.PORT);
  server.on('request',(req, res) => {
-  console.log(req);
+    debug('WebHook request URL: %s', req.url);
+    debug('WebHook request headers: %j', req.headers);
+    console.log(JSON.parse(body.toString()));
   res.end('hello world\n');
   });
 }
