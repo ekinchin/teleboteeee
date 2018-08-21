@@ -43,8 +43,10 @@ function Server(){
     }
     req.on('data',(data)=>{
       data=JSON.parse(data);
+      console.log(data,'\n');
       console.log(data.message.chat.id);
-      console.log(data.message.chat.text);
+      console.log(data.message.text);
+      console.log(data.message.entities);
     });
     res.end();
   });
