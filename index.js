@@ -39,6 +39,10 @@ function Server(){
     console.log('WebHook request URL: %s', req.url);
     console.log('WebHook request headers: %j', req.headers);
     console.log(req.body);
+    req.on('data',(data)=>{
+      console.log(data);
+        console.log(JSON.parse(data));
+    });
     res.end('hello world\n');
   });
 }
