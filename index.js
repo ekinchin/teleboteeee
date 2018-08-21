@@ -38,7 +38,7 @@ function Server(){
   server.on('request',(req, res) => {
     console.log('WebHook request URL: %s', req.url);
     console.log('WebHook request headers: %j', req.headers);
-    console.log(JSON.parse(req.body.toString()));
+    console.log(req.body);
     res.end('hello world\n');
   });
 }
