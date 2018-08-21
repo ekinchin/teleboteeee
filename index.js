@@ -31,6 +31,14 @@ function setWebHook(telegram, token, webhookpath, command) {
   });
 }
 
+function reqParse(){
+
+}
+
+function botResponse(){
+
+}
+
 function Server(){
   console.log("OK, starting server....")
   var server = http.createServer();
@@ -40,12 +48,15 @@ function Server(){
       console.log("Telegram request");
     }
     req.on('data',(data)=>{
-      console.log("hello");
       var request=JSON.parse(data);
-      console.log(request,'\n');
       console.log(request.message.chat.id);
       console.log(request.message.text);
       console.log(request.message.entities);
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(
+      JSON.stringify({"method": "sendMessage", "text": "hello", "chat_id":request.message.chat.id
+        }));
     });
     res.end('hello');
   });
