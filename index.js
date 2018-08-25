@@ -55,17 +55,15 @@ function setWebHook(telegram, token, webhookpath, command) {
         (result==true)?resolve(result):reject(result);
       });
     });
-    request.end(JSON.stringify({"method": "sendMessage", "text": "hello", "chat_id":request.message.chat.id}));
+    request.end();
   });
 }
 
-function reqParse(request){
-  return new Promise((resolve,reject)=>{
-    console.log("request parsing");
-  });
+function reqParse(){
+
 }
 
-function responseGen(){
+function botResponse(){
 
 }
 
@@ -79,11 +77,14 @@ function Server(){
     }
     req.on('data',(data)=>{
       var request=JSON.parse(data);
+      console.log(request.message.chat.id);
+      console.log(request.message.text);
+      console.log(request.message.entities);
 
-      res.setHeader('Content-Type', 'application/json');
-      res.end(
-        JSON.stringify({"method": "sendMessage", "text": "hello", "chat_id":request.message.chat.id})
-        );
+    res.setHeader('Content-Type', 'application/json');
+    res.end(
+      JSON.stringify({"method": "sendMessage", "text": "hello", "chat_id":request.message.chat.id
+        }));
     });
   });
 }
