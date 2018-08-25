@@ -12,7 +12,7 @@ var CMD = {
   getUpdates:"getUpdates"
 };
 
-/*function sendRequest(host, port, path,data) {
+function sendRequest(host, port, path,data) {
   var options = {
     hostname: host,
     port: port,
@@ -37,7 +37,7 @@ function sendHttpRequest(options,data) {
 
 
 
-console.log("TEST",sendRequest(telegram, 443, "/bot"+token,{"method": "getMe"}));*/
+console.log("TEST",sendRequest(telegram, 443, "/bot"+token+'/getMe',{"method": "getMe"}));
 
 function setWebHook(telegram, token, webhookpath, command) {
   return new Promise((resolve,reject)=>{
