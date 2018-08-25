@@ -13,6 +13,7 @@ var CMD = {
 };
 
 function sendRequest(host, port, path,data) {
+  console.log("in sendRequest");
   var options = {
     hostname: host,
     port: port,
@@ -26,9 +27,10 @@ function sendRequest(host, port, path,data) {
 }
 
 function sendHttpRequest(options,data) {
-
+console.log("in sendHttpRequest");
   var request = https.request(options, (res) => {
     res.on('data', (data) => {
+      console.log("in data response", JSON.parse(data))
       return JSON.parse(data);
     });
   });
