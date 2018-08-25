@@ -12,36 +12,31 @@ var CMD = {
   getUpdates:"getUpdates"
 };
 
-function sendRequest(host, port, path,data) {
-  console.log("in sendRequest");
+function sendHttpRequest(host, path) {
   var options = {
     hostname: host,
-    port: port,
+    port: 443,
     path:path,
-    method:'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    method:'GET'
   };
-  return sendHttpRequest(options,data);
-}
-
-function sendHttpRequest(options,data) {
-console.log("in sendHttpRequest");
   var request = https.request(options, (res) => {
     res.on('data', (data) => {
-      console.log("in data response", JSON.parse(data))
-      return JSON.parse(data);
+      return data;
     });
   });
-  request.end(JSON.stringify(data));
+  request.end();
 }
 
-
-
-console.log("TEST",sendRequest(telegram, 443, "/bot"+token+'/getMe',{"method": "sendMessage", "text": "hellooooooo", "chat_id":491856763}));
-
 function setWebHook(telegram, token, webhookpath, command) {
+  return new Promise((resolve,reject)=>{
+    var path="/bot"+token+"/"+command+"?url="+webhookpath;
+    var data = sendHttpRequest(telegram,path);
+    var result=JSON.parse(data).result;
+    (result==true)?resolve(result):reject(result);
+  });
+}
+
+/*function setWebHook(telegram, token, webhookpath, command) {
   return new Promise((resolve,reject)=>{
     console.log("Set WebHook");
     var options = {
@@ -59,7 +54,7 @@ function setWebHook(telegram, token, webhookpath, command) {
     });
     request.end();
   });
-}
+}*/
 
 function reqParse(){
 
@@ -83,10 +78,10 @@ function Server(){
       console.log(request.message.text);
       console.log(request.message.entities);
 
-    res.setHeader('Content-Type', 'application/json');
-    res.end(
-      JSON.stringify({"method": "sendMessage", "text": "hello", "chat_id":request.message.chat.id
-        }));
+      res.setHeader('Content-Type', 'application/json');
+      res.end(
+        JSON.stringify({"method": "sendMessage", "text": "hello", "chat_id":request.message.chat.id
+      }));
     });
   });
 }
@@ -95,5 +90,4 @@ var prmSetWebHook = setWebHook(telegram, token, webHookPath, CMD.setWebHook);
 prmSetWebHook.then(Server,
   (error)=>{
     console.log("ERROR",error);
-  }
-);
+  });
