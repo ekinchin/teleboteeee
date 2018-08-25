@@ -39,7 +39,7 @@ console.log("in sendHttpRequest");
 
 
 
-console.log("TEST",sendRequest(telegram, 443, "/bot"+token+'/getMe',{"method": "sendMessage", "text": "hellooooooo", "chat_id":491856763));
+console.log("TEST",sendRequest(telegram, 443, "/bot"+token+'/getMe',{"method": "sendMessage", "text": "hellooooooo", "chat_id":491856763}));
 
 function setWebHook(telegram, token, webhookpath, command) {
   return new Promise((resolve,reject)=>{
