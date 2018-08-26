@@ -76,7 +76,7 @@ function Server(){
       console.log("Telegram request");
     }
     request.on('data',(data)=>{
-      result=reqParse(data);
+      var result=reqParse(data);
       if(result!=0){
         response.setHeader('Content-Type', 'application/json');
         response.write(result);
