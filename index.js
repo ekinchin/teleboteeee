@@ -41,23 +41,24 @@ function reqParse(data){
   console.log(data);
   var text = data.message.text;
   var entities = data.message.entities||{};
+    console.log(entities.type);
   var answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
 
   if(entities.type=='bot_command'){
     console.log("bot command");
     switch(text.split(' ')[0]) {
       case '/start':
-    console.log("/start");
+      console.log("/start");
       answer["text"]="Hello, "+data.message.from.first_name;
       break;
 
       case '/help':  // if (x === 'value2')
 
-    console.log("help");
+      console.log("help");
       answer["text"]="Я еще маленький и ничего не умею";
       break;
       default:
-    console.log("unknown");
+      console.log("unknown");
       answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
       break;
     }
