@@ -40,7 +40,7 @@ function reqParse(data){
   data=JSON.parse(data);
   var text = data.message.text;
   var entities={};
-  (data.message.entities==undefined)?pass:entities = data.message.entities[0];
+  (data.message.entities==undefined)?null:entities = data.message.entities[0];
   var answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
 
   if(entities.type=='bot_command'){
