@@ -56,7 +56,7 @@ function Server(){
     request.on('data',(data)=>{
       var request=JSON.parse(data);
       response.setHeader('Content-Type', 'application/json');
-      response.write(JSON.stringify({"method": "sendMessage", "text": request.message.text, "chat_id":request.message.chat.id}));
+      response.write(JSON.stringify({"method": "sendMessage", "text": request, "chat_id":request.message.chat.id}));
       response.end();
     });
   });
