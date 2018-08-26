@@ -36,8 +36,30 @@ function sendHttpRequest(host, path){
   });
 }
 
-function reqParse(){
+function reqParse(data){
+  var text = data.message.text;
+  var entities = data.message.entities;
 
+  answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
+
+  if(entities.type=='bot_command'){
+    switch(text.split(' ')[0]) {
+      case '/start':
+      answer["text"]="Hello, "+data.message.from.first_name;
+      break;
+
+      case '/help':  // if (x === 'value2')
+      answer["text"]="Я еще маленький и ничего не умею";
+      break;
+      default:
+      answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
+      break;
+    }
+  }else{
+    return 0;
+  }
+  return JSON.stringify(answer);
+//JSON.stringify({"method": "sendMessage", "text": request, "chat_id":request.message.chat.id})
 }
 
 function botResponse(){
@@ -54,10 +76,12 @@ function Server(){
       console.log("Telegram request");
     }
     request.on('data',(data)=>{
-      var request=JSON.parse(data);
-      response.setHeader('Content-Type', 'application/json');
-      response.write(JSON.stringify({"method": "sendMessage", "text": request, "chat_id":request.message.chat.id}));
-      response.end();
+      result=reqParse(data);
+      if(result!=0){
+        response.setHeader('Content-Type', 'application/json');
+        response.write(result);
+        response.end();
+      }
     });
   });
 }
