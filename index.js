@@ -38,29 +38,21 @@ function sendHttpRequest(host, path){
 
 function reqParse(data){
   data=JSON.parse(data);
-  console.log(data);
   var text = data.message.text;
   var entities = data.message.entities[0]||{};
-    console.log(entities.type);
   var answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
 
   if(entities.type=='bot_command'){
-    console.log("bot command");
     switch(text.split(' ')[0]) {
       case '/start':
-      console.log("/start");
-      answer["text"]="Hello, "+data.message.from.first_name;
-      break;
-
-      case '/help':  // if (x === 'value2')
-
-      console.log("help");
-      answer["text"]="Я еще маленький и ничего не умею";
-      break;
+        answer["text"]="Hello, "+data.message.from.first_name;
+        break;
+      case '/help':
+        answer["text"]="Я еще маленький и ничего не умею";
+        break;
       default:
-      console.log("unknown");
-      answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
-      break;
+        answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
+        break;
     }
   }else{
     return 0;
