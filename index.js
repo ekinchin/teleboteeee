@@ -37,6 +37,7 @@ function sendHttpRequest(host, path){
 }
 
 function reqParse(data){
+  data=JSON.parse(data);
   var text = data.message.text;
   var entities = data.message.entities;
 
