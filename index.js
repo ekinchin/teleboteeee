@@ -39,7 +39,7 @@ function sendHttpRequest(host, path){
 function reqParse(data){
   data=JSON.parse(data);
   var text = data.message.text;
-  var entities = data.message.entities;
+  var entities = data.message.entities||{};
   var answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
 
   if(entities.type=='bot_command'){
