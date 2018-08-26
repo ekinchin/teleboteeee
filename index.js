@@ -40,8 +40,7 @@ function reqParse(data){
   data=JSON.parse(data);
   var text = data.message.text;
   var entities = data.message.entities;
-
-  answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
+  var answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
 
   if(entities.type=='bot_command'){
     switch(text.split(' ')[0]) {
