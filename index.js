@@ -81,8 +81,8 @@ function Server(){
       if(result!=0){
         response.setHeader('Content-Type', 'application/json');
         response.write(result);
-        response.end();
       }
+      response.end();
     });
   });
 }
