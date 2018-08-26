@@ -27,7 +27,7 @@ function sendHttpRequest(host, path) {
   request.end();
 }
 
-function setWebHook(telegram, token, webhookpath, command) {
+/*function setWebHook(telegram, token, webhookpath, command) {
   return new Promise((resolve,reject)=>{
     var path="/bot"+token+"/"+command+"?url="+webhookpath;
     var data = sendHttpRequest(telegram,path);
@@ -35,8 +35,8 @@ function setWebHook(telegram, token, webhookpath, command) {
     (result==true)?resolve(result):reject(result);
   });
 }
-
-/*function setWebHook(telegram, token, webhookpath, command) {
+*/
+function setWebHook(telegram, token, webhookpath, command) {
   return new Promise((resolve,reject)=>{
     console.log("Set WebHook");
     var options = {
@@ -54,7 +54,7 @@ function setWebHook(telegram, token, webhookpath, command) {
     });
     request.end();
   });
-}*/
+}
 
 function reqParse(){
 
