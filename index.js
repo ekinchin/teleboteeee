@@ -12,32 +12,31 @@ var CMD = {
   getUpdates:"getUpdates"
 };
 
-function sendHttpRequest(host, path) {
-  var options = {
-    hostname: host,
-    port: 443,
-    path:path,
-    method:'GET'
-  };
-  var request = https.request(options, (res) => {
-    res.on('data', (data) => {
-      return data;
-    });
+function sendHttpRequest(host, path){
+  return new Promise((resolve,reject)=>{
+    var options = {
+      hostname: host,
+      port: 443,
+      path:path,
+      method:'GET'
+    };
+    https.request(options, (res) => {
+      var answer='';
+      res.on('data', (data) => {
+        answer+=data;
+      });
+      res.on('end',()=>{
+        console.log(JSON.parse(answer));
+        resolve(answer);
+      });
+      res.on('error',()=>{
+        reject(answer);
+      })
+    }).end();
   });
-  request.end();
 }
 
 /*function setWebHook(telegram, token, webhookpath, command) {
-  return new Promise((resolve,reject)=>{
-    console.log("Set WebHook");
-    var path="/bot"+token+"/"+command+"?url="+webhookpath;
-    var data = sendHttpRequest(telegram,path);
-    var result=JSON.parse(data).result;
-    (result==true)?resolve(result):reject(result);
-  });
-}
-*/
-function setWebHook(telegram, token, webhookpath, command) {
   return new Promise((resolve,reject)=>{
     console.log("Set WebHook");
     var options = {
@@ -54,7 +53,7 @@ function setWebHook(telegram, token, webhookpath, command) {
       });
     }).end();
   });
-}
+}*/
 
 function reqParse(){
 
@@ -82,7 +81,8 @@ function Server(){
   });
 }
 
-var prmSetWebHook = setWebHook(telegram, token, webHookPath, CMD.setWebHook);
+//var prmSetWebHook = setWebHook(telegram, token, webHookPath, CMD.setWebHook);
+var prmSetWebHook = sendHttpRequest(telegram, "/bot"+token+"/"+CMD.setWebHook+"?url="+webHookPath);
 prmSetWebHook.then(Server,(error)=>{
   console.log("ERROR",error);
 });
