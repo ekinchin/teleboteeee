@@ -36,25 +36,6 @@ function sendHttpRequest(host, path){
   });
 }
 
-/*function setWebHook(telegram, token, webhookpath, command) {
-  return new Promise((resolve,reject)=>{
-    console.log("Set WebHook");
-    var options = {
-      hostname: telegram,
-      port: 443,
-      path:"/bot"+token+"/"+command+"?url="+webhookpath,
-      method: 'GET'
-    };
-    https.request(options, (res) => {
-      res.on('data', (data) => {
-        var result=JSON.parse(data).result;
-        console.log(result);
-        (result==true)?resolve(result):reject(result);
-      });
-    }).end();
-  });
-}*/
-
 function reqParse(){
 
 }
@@ -67,22 +48,21 @@ function Server(){
   console.log("OK, starting server....")
   var server = http.createServer();
   server.listen(process.env.PORT);
-  server.on('request',(req, res) => {
-    if(req.url==('/'+token)){
+
+  server.on('request',(request, response) => {
+    if(request.url==('/'+token)){
       console.log("Telegram request");
     }
-    req.on('data',(data)=>{
+    request.on('data',(data)=>{
       var request=JSON.parse(data);
-      res.setHeader('Content-Type', 'application/json');
-      res.end(
-        JSON.stringify({"method": "sendMessage", "text": "hello", "chat_id":request.message.chat.id
-      }));
+      response.setHeader('Content-Type', 'application/json');
+      response.write(JSON.stringify({"method": "sendMessage", "text": request.message.text, "chat_id":request.message.chat.id)});
+      response.end();
     });
   });
 }
 
-//var prmSetWebHook = setWebHook(telegram, token, webHookPath, CMD.setWebHook);
-var prmSetWebHook = sendHttpRequest(telegram, "/bot"+token+"/"+CMD.setWebHook+"?url="+webHookPath);
-prmSetWebHook.then(Server,(error)=>{
+sendHttpRequest(telegram, "/bot"+token+"/"+CMD.setWebHook+"?url="+webHookPath)
+.then(Server,(error)=>{
   console.log("ERROR",error);
 });
