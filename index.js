@@ -40,7 +40,7 @@ function reqParse(data){
   data=JSON.parse(data);
   console.log(data);
   var text = data.message.text;
-  var entities = data.message.entities||{};
+  var entities = data.message.entities[0]||{};
     console.log(entities.type);
   var answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
 
