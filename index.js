@@ -34,8 +34,8 @@ var bot_commands={
 				}
 				,(error)=>{
 	  				console.log("ERROR",error);
-				};
-		}
+				});
+		};
 	}
 };
 
