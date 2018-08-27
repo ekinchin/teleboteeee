@@ -30,7 +30,7 @@ var bot_commands={
 		handler:
 			function(host, path, header){
 				sendHttpRequest(host, path, header)
-				.then((data)=>{console.log("ERROR",data);}
+				.then((data)=>{console.log("OK",data);}
 				,(error)=>{console.log("ERROR",error);});
 			}
 	}
@@ -46,23 +46,15 @@ function sendHttpRequest(host, path,header){
       method:'GET'
     };
     if(header!=undefined){
-    	options = {
-			hostname: host,
-			port: 443,
-			path:path,
-			method:'GET',
-			headers:{
-				'X-Yandex-API-Key' : '40f0e52b-168d-40a4-ba38-0c2bf4d98726'
-			}
-	    };
+    	options.headers=header;
     }
-    console.log(options);
     https.request(options, (res) => {
       var answer='';
       res.on('data', (data) => {
         answer+=data;
       });
       res.on('end',()=>{
+      	console.log(anser);
         console.log(JSON.parse(answer));
         resolve(answer);
       });
