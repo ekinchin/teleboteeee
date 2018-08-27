@@ -28,13 +28,8 @@ var bot_commands={
 	'/weather':{
 		descripion:'Погода',
 		handler:function(host, path, header){
-		var prmWeather = sendHttpRequest(host, path, header)
-			.then((data)=>{
-  				console.log("ERROR",data);
-			}
-			,(error)=>{
-  				console.log("ERROR",error);
-			});
+			var prmWeather = sendHttpRequest(host, path, header)
+			return prmWeather;
 		}
 	}
 };
@@ -85,7 +80,14 @@ function reqParse(data){
         break;
       case '/weather':
       	console.log("weather");
-      	bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
+      	let promise = bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
+      	promise.then((data)=>{
+      			console.log("ERROR",data);
+			}
+			,(error)=>{
+  				console.log("ERROR",error);
+			}
+		);
       	break;
       default:
         answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
