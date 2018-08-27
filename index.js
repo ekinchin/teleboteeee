@@ -54,7 +54,7 @@ function sendHttpRequest(host, path,header){
         answer+=data;
       });
       res.on('end',()=>{
-      	console.log(anwser);
+      	console.log(answer);
         console.log(JSON.parse(answer));
         resolve(answer);
       });
