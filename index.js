@@ -19,15 +19,15 @@ var CMD = {
 
 var bot_commands={
 	'/start':{
-		descripion:'Начать работу с ботом';
-		handler:()=>{};
+		descripion:'Начать работу с ботом',
+		handler:()=>{}
 	},
 	'/help':{
-		descripion:'Помощь';
-		handler:()=>{};
+		descripion:'Помощь',
+		handler:()=>{}
 	},
 	'/weather':{
-		descripion:'Погода';
+		descripion:'Погода',
 		handler:()=>{
 		var prmWeather = sendHttpRequest(weatherHost, weatherPath, weatherHeader)
 			.then((data)=>{
@@ -35,9 +35,8 @@ var bot_commands={
 			}
 			,(error)=>{
   				console.log("ERROR",error);
-			});
-
-		};
+			})
+		}
 	}
 };
 
