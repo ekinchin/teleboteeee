@@ -43,7 +43,7 @@ function reqParse(data){
   (data.message.entities==undefined)?null:entities = data.message.entities[0];
   var answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
 
-  if(entities.type=='bot_command'){
+  if(entities.type.toLowerCase()=='bot_command'){
     switch(text.split(' ')[0]) {
       case '/start':
         answer["text"]="Hello, "+data.message.from.first_name;
