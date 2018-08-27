@@ -7,10 +7,9 @@ var token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 var telegram = "api.telegram.org";
 var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 
-var weatherToken = "40f0e52b-168d-40a4-ba38-0c2bf4d98726";
 var weatherHost = "https://api.weather.yandex.ru";
 var weatherPath = "/v1/informers&lat=57&lon=65&lang=ru_RU";
-var weatherHeader = {'X-Yandex-API-Key': weatherToken};
+var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
 var CMD = {
   setWebHook:"setwebhook",
@@ -35,7 +34,7 @@ var bot_commands={
 			}
 			,(error)=>{
   				console.log("ERROR",error);
-			})
+			});
 		}
 	}
 };
@@ -52,6 +51,7 @@ function sendHttpRequest(host, path,header){
     if(header!=undefined){
     	options.headers=header;
     }
+    console.log(options);
     https.request(options, (res) => {
       var answer='';
       res.on('data', (data) => {
@@ -84,6 +84,7 @@ function reqParse(data){
         answer["text"]="Я еще маленький и ничего не умею";
         break;
       case '/weather':
+      	console.log("weather");
       	bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
       	break;
       default:
