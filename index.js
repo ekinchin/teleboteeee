@@ -28,8 +28,13 @@ var bot_commands={
 	'/weather':{
 		descripion:'Погода',
 		handler:function(host, path, header){
-			var prmWeather = sendHttpRequest(host, path, header)
-			return prmWeather;
+			sendHttpRequest(host, path, header)
+				.then((data)=>{
+	      			console.log("ERROR",data);
+				}
+				,(error)=>{
+	  				console.log("ERROR",error);
+				};
 		}
 	}
 };
@@ -44,7 +49,15 @@ function sendHttpRequest(host, path,header){
       method:'GET'
     };
     if(header!=undefined){
-    	options.headers=header;
+    	options = {
+			hostname: host,
+			port: 443,
+			path:path,
+			method:'GET',
+			headers:{
+				'X-Yandex-API-Key' : '40f0e52b-168d-40a4-ba38-0c2bf4d98726'
+			}
+	    };
     }
     console.log(options);
     https.request(options, (res) => {
@@ -80,14 +93,7 @@ function reqParse(data){
         break;
       case '/weather':
       	console.log("weather");
-      	let promise = bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
-      	promise.then((data)=>{
-      			console.log("ERROR",data);
-			}
-			,(error)=>{
-  				console.log("ERROR",error);
-			}
-		);
+      	bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
       	break;
       default:
         answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
