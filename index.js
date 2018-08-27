@@ -85,6 +85,7 @@ function reqParse(data){
         break;
       case '/weather':
       	bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
+      	break;
       default:
         answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
         break;
