@@ -28,8 +28,8 @@ var bot_commands={
 	},
 	'/weather':{
 		descripion:'Погода',
-		handler:()=>{
-		var prmWeather = sendHttpRequest(weatherHost, weatherPath, weatherHeader)
+		handler:(host, path, header)=>{
+		var prmWeather = sendHttpRequest(host, path, header)
 			.then((data)=>{
   				console.log("ERROR",data);
 			}
@@ -83,6 +83,8 @@ function reqParse(data){
       case '/help':
         answer["text"]="Я еще маленький и ничего не умею";
         break;
+      case '/weather':
+      	bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
       default:
         answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
         break;
