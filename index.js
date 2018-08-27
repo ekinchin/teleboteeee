@@ -27,7 +27,7 @@ var bot_commands={
 	},
 	'/weather':{
 		descripion:'Погода',
-		handler:(host, path, header)=>{
+		handler:async (host, path, header)=>{
 		var prmWeather = sendHttpRequest(host, path, header)
 			.then((data)=>{
   				console.log("ERROR",data);
@@ -85,7 +85,7 @@ function reqParse(data){
         break;
       case '/weather':
       	console.log("weather");
-      	bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
+      	await bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
       	break;
       default:
         answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
