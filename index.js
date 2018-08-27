@@ -27,15 +27,12 @@ var bot_commands={
 	},
 	'/weather':{
 		descripion:'Погода',
-		handler:function(host, path, header){
-			sendHttpRequest(host, path, header)
-				.then((data)=>{
-	      			console.log("ERROR",data);
-				}
-				,(error)=>{
-	  				console.log("ERROR",error);
-				});
-		};
+		handler:
+			function(host, path, header){
+				sendHttpRequest(host, path, header)
+				.then((data)=>{console.log("ERROR",data);}
+				,(error)=>{console.log("ERROR",error);});
+			}
 	}
 };
 
