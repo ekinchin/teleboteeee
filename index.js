@@ -67,26 +67,6 @@ var bot_commands={
 	}
 };
 
-/*	'/weather':{
-		descripion:'Погода',
-		handler:
-			(host, path, header, chat_id, data)=>{
-				sendHttpRequest(host, path, header)
-				.then(
-					(data)=>{
-						data=JSON.parse(data);
-						var answer="Текущая температура: " + data.fact.temp+'\n'
-							+"Ощущается как: " + data.fact.feels_like+'\n'
-							+"Ветер: " + data.fact.wind_speed;
-						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
-					},
-					(error)=>{
-						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('
-					}
-				)
-			});
-		}
-	},*/
 function sendJSONRequest(host, path, data){
 	return new Promise((resolve,reject)=>{
 		var options = {
@@ -166,15 +146,12 @@ function Server(){
 	var server = http.createServer();
 	server.listen(process.env.PORT);
 	server.on('request',(request, response) => {
-		if(request.url==('/'+token)){
-			console.log("Telegram request");
-		}
+		var requestData='';
 		request.on('data',(data)=>{
-			var result=reqParse(data);
-			if(result!=0){
-				response.setHeader('Content-Type', 'application/json');
-				response.write(result);
-			}
+			requestData+=data;
+		});
+		request.on('end',()=>{
+			reqParse(requestData);
 			response.end();
 		});
 	});
