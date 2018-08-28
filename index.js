@@ -47,7 +47,6 @@ var bot_commands={
 					(data)=>{
 						console.log(data);
 						data=JSON.parse(data);
-						(data.ok==false)?return:null;
 						sendHttpRequest(weatherHost, weatherPath+"?lat="+data.latitude+"&lon="+data.longitude+"&lang=ru_RU", weatherHeader)
 						.then(
 							(data)=>{
