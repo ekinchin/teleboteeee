@@ -31,12 +31,13 @@ var bot_commands={
 		handler:
 			function(host, path, header, chat_id){
 				sendHttpRequest(host, path, header)
-				.then((data)=>{
-					sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":data});
+					.then((data)=>{
+						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":data});
+					},
+					(error)=>{
+						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":'Что-то не получилось :-('});
+					});
 			}
-				,(error)=>{
-					sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":'Что-то не получилось :-('});
-			});
 	}
 };
 
