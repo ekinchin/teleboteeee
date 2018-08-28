@@ -25,7 +25,7 @@ var bot_commands={
 		descripion:'Начать работу с ботом',
 		handler:
 			(host, path, header, chat_id, data)=>{
-				answer["text"]="Hello, "+ data.message.from.first_name;
+				answer="Hello, "+ data.message.from.first_name;
 				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
 			}
 	},
@@ -33,7 +33,7 @@ var bot_commands={
 		descripion:'Помощь',
 		handler:
 			(host, path, header, chat_id, data)=>{
-				var answer["text"]="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
+				var answer="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
 				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
 			}
 	},
