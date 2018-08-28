@@ -32,6 +32,7 @@ var bot_commands={
 			function(host, path, header, chat_id){
 				sendHttpRequest(host, path, header)
 					.then((data)=>{
+						data=JSON.parse(data);
 						var answer="Текущая температура: " + data.fact.temp+'\n'
 							+"Ощущается как: " + data.fact.feels_like+'\n'
 							+"Ветер: " + data.fact.wind_speed;
@@ -91,8 +92,6 @@ function sendHttpRequest(host, path,header){
         answer+=data;
       });
       res.on('end',()=>{
-      	console.log(answer);
-        console.log(JSON.parse(answer));
         resolve(answer);
       });
       res.on('error',()=>{
