@@ -45,6 +45,7 @@ var bot_commands={
 				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.chatAction, {"method": CMD.chatAction, "chat_id":chat_id, "action":"find_location"})
 				.then(
 					(data)=>{
+						console.log(data);
 						data=JSON.parse(data);
 						sendHttpRequest(weatherHost, weatherPath+"?lat="+data.latitude+"&lon="+data.longitude+"&lang=ru_RU", weatherHeader)
 						.then(
