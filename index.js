@@ -33,9 +33,9 @@ var bot_commands={
 				sendHttpRequest(host, path, header)
 				.then((data)=>{console.log("OK",data);}
 				,(error)=>{console.log("ERROR",error);});
-				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":491856768, "text":'кому-то нужны погода'})
+				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":491856763, "text":'кому-то нужны погода'})
 					.then((answer)=>{
-						
+
 					},
 						(error)=>{
 
