@@ -13,7 +13,8 @@ var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"}
 
 var CMD = {
   setWebHook:"setwebhook",
-  getUpdates:"getUpdates"
+  getUpdates:"getUpdates",
+  sendMessage:"sendMessage"
 };
 
 var bot_commands={
@@ -32,10 +33,46 @@ var bot_commands={
 				sendHttpRequest(host, path, header)
 				.then((data)=>{console.log("OK",data);}
 				,(error)=>{console.log("ERROR",error);});
+				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":491856768, "text":'кому-то нужны погода'})
+					.then((answer)=>{
+						
+					},
+						(error)=>{
+
+						})
 			}
 	}
 };
 
+function sendJSONRequest(host, path, data){
+  return new Promise((resolve,reject)=>{
+    var options = {
+      hostname: host,
+      port: 443,
+      path:path,
+      method:'POST',
+      headers:{
+      	'Content-Type':'application/json'
+      }
+    };
+    const req = https.request(options, (res) => {
+      var answer='';
+      res.on('data', (data) => {
+        answer+=data;
+      });
+      res.on('end',()=>{
+      	console.log(answer);
+        //resolve(answer);
+      });
+      res.on('error',()=>{
+      	console.log(answer);
+        //reject(answer);
+      })
+    });
+    req.write(JSON.stringify(data));
+    req.end();
+  });
+}
 
 function sendHttpRequest(host, path,header){
   return new Promise((resolve,reject)=>{
