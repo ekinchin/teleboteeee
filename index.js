@@ -29,17 +29,13 @@ var bot_commands={
 	'/weather':{
 		descripion:'Погода',
 		handler:
-			function(host, path, header){
+			function(host, path, header, chat_id){
 				sendHttpRequest(host, path, header)
-				.then((data)=>{console.log("OK",data);}
-				,(error)=>{console.log("ERROR",error);});
-				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":491856763, "text":'кому-то нужны погода'})
-					.then((answer)=>{
-
-					},
-						(error)=>{
-
-						})
+				.then((data)=>{
+					sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":data});
+			}
+				,(error)=>{
+					sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":'Что-то не получилось :-('});
 			}
 	}
 };
@@ -119,7 +115,7 @@ function reqParse(data){
         break;
       case '/weather':
       	console.log("weather");
-      	bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader);
+      	bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader, data.message.chat.id);
       	break;
       default:
         answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
