@@ -112,7 +112,7 @@ function reqParse(data){
         answer["text"]="Hello, "+data.message.from.first_name;
         break;
       case '/help':
-        answer["text"]="Я еще маленький и ничего не умею";
+        answer["text"]="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
         break;
       case '/weather':
       	console.log("weather");
