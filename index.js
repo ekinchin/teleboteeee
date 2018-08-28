@@ -25,7 +25,7 @@ var bot_commands={
 		descripion:'Начать работу с ботом',
 		handler:
 			(host, path, header, chat_id, data)=>{
-				answer="Hello, "+ data.message.from.first_name;
+				var answer="Hello, "+ data.message.from.first_name;
 				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
 			}
 	},
