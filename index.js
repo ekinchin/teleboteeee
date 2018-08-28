@@ -46,7 +46,7 @@ var bot_commands={
 				.then(
 					(data)=>{
 						data=JSON.parse(data);
-						sendHttpRequest(weatherHost, weatherPath+"?lat="+data.latitude+&lon=data.longitude+&lang=ru_RU, weatherHeader)
+						sendHttpRequest(weatherHost, weatherPath+"?lat="+data.latitude+"&lon="data.longitude+"&lang=ru_RU", weatherHeader)
 						.then(
 							(data)=>{
 								data=JSON.parse(data);
