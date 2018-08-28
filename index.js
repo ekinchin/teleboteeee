@@ -11,14 +11,13 @@ var telegram = "api.telegram.org";
 var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 
 var weatherHost = "api.weather.yandex.ru";
-var weatherPath = "/v1/informers";//?lat=57&lon=65&lang=ru_RU";
+var weatherPath = "/v1/informers?lat=57&lon=65&lang=ru_RU";
 var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
 var CMD = {
 	setWebHook:"setWebhook",
 	getUpdates:"getUpdates",
-	sendMessage:"sendMessage",
-	sendChatAction:"sendChatAction"
+	sendMessage:"sendMessage"
 };
 
 var bot_commands={
@@ -42,30 +41,21 @@ var bot_commands={
 		descripion:'Погода',
 		handler:
 			(chat_id, data)=>{
-				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendChatAction, {"method": CMD.sendChatAction, "chat_id":chat_id, "action":"find_location"})
+				sendHttpRequest(weatherHost, weatherPath, weatherHeader)
 				.then(
 					(data)=>{
-						console.log(data);
 						data=JSON.parse(data);
-						sendHttpRequest(weatherHost, weatherPath+"?lat="+data.latitude+"&lon="+data.longitude+"&lang=ru_RU", weatherHeader)
-						.then(
-							(data)=>{
-								data=JSON.parse(data);
-								var answer="Текущая температура: " + data.fact.temp+'\n'
-									+"Ощущается как: " + data.fact.feels_like+'\n'
-									+"Ветер: " + data.fact.wind_speed;
-								sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
-							},
-							(error)=>{
-								sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('})
-							}
-						)
+						var answer="Текущая температура: " + data.fact.temp+'\n'
+							+"Ощущается как: " + data.fact.feels_like+'\n'
+							+"Ветер: " + data.fact.wind_speed;
+						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 					},
-					(data)=>{
-
+					(error)=>{
+						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('
 					}
-				);
-			}
+				)
+			});
+		}
 	},
 	'undefined':{
 		descripion:'Неизвестная команда',
