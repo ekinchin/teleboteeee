@@ -3,6 +3,9 @@
 var http = require('http');
 var https = require('https');
 
+var EventEmitter = require('events').EventEmitter;
+var eventer = new EventEmitter;
+
 var token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 var telegram = "api.telegram.org";
 var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
@@ -116,7 +119,8 @@ function reqParse(data){
 			answer["text"]="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
 			break;
 			case '/weather':
-			bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader, data.message.chat.id);
+			eventer.emmit('/weather', weatherHost, weatherPath, weatherHeader, data.message.chat.id);
+			//bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader, data.message.chat.id);
 			break;
 			default:
 			answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
@@ -150,6 +154,9 @@ function Server(){
 		});
 	});
 }
+
+eventer.on('/weather',weather);
+
 
 sendHttpRequest(telegram, "/bot"+token+"/"+CMD.setWebHook+"?url="+webHookPath)
 .then(Server,(error)=>{
