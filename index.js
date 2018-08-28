@@ -119,7 +119,7 @@ function reqParse(data){
 			answer["text"]="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
 			break;
 			case '/weather':
-			eventer.emmit('/weather', weatherHost, weatherPath, weatherHeader, data.message.chat.id);
+			eventer.emit('/weather', weatherHost, weatherPath, weatherHeader, data.message.chat.id);
 			//bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader, data.message.chat.id);
 			break;
 			default:
