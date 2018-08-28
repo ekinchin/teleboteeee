@@ -23,31 +23,43 @@ var CMD = {
 var bot_commands={
 	'/start':{
 		descripion:'Начать работу с ботом',
-		handler:()=>{}
+		handler:
+			(host, path, header, chat_id, data)=>{
+				answer["text"]="Hello, "+ data.message.from.first_name;
+				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+			}
 	},
 	'/help':{
 		descripion:'Помощь',
-		handler:()=>{}
+		handler:
+			(host, path, header, chat_id, data)=>{
+				var answer["text"]="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
+				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+			}
 	},
 	'/weather':{
 		descripion:'Погода',
-		handler:weather
+		handler:
+			(host, path, header, chat_id)=>{
+				sendHttpRequest(host, path, header)
+				.then(
+					(data)=>{
+						data=JSON.parse(data);
+						var answer="Текущая температура: " + data.fact.temp+'\n'
+							+"Ощущается как: " + data.fact.feels_like+'\n'
+							+"Ветер: " + data.fact.wind_speed;
+						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+					},
+					(error)=>{
+						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":'Что-то не получилось :-('
+					}
+				)
+			});
+		}
 	}
 };
 
-function weather(host, path, header, chat_id){
-	sendHttpRequest(host, path, header)
-	.then((data)=>{
-		data=JSON.parse(data);
-		var answer="Текущая температура: " + data.fact.temp+'\n'
-			+"Ощущается как: " + data.fact.feels_like+'\n'
-			+"Ветер: " + data.fact.wind_speed;
-		sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
-	},
-	(error)=>{
-		sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":'Что-то не получилось :-('});
-	});
-}
+
 
 function sendJSONRequest(host, path, data){
 	return new Promise((resolve,reject)=>{
@@ -113,18 +125,13 @@ function reqParse(data){
 	if(entities.type=='bot_command'){
 		switch(text.split(' ')[0].toLowerCase()) {
 			case '/start':
-			answer["text"]="Hello, "+ data.message.from.first_name;
-			break;
 			case '/help':
-			answer["text"]="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
-			break;
 			case '/weather':
-			eventer.emit('/weather', weatherHost, weatherPath, weatherHeader, data.message.chat.id);
-			//bot_commands['/weather'].handler(weatherHost, weatherPath, weatherHeader, data.message.chat.id);
-			break;
+				eventer.emit(text.split(' ')[0].toLowerCase(), weatherHost, weatherPath, weatherHeader, data.message.chat.id, data);
+				break;
 			default:
-			answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
-			break;
+				answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
+				break;
 		};
 	}else{
 		return 0;
@@ -155,8 +162,9 @@ function Server(){
 	});
 }
 
-eventer.on('/weather',weather);
-
+eventer.on('/weather',bot_commands['/weather'].handler);
+eventer.on('/start',bot_commands['/start'].handler);
+eventer.on('/help',bot_commands['/help'].handler);
 
 sendHttpRequest(telegram, "/bot"+token+"/"+CMD.setWebHook+"?url="+webHookPath)
 .then(Server,(error)=>{
