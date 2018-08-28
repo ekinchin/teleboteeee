@@ -11,36 +11,75 @@ var telegram = "api.telegram.org";
 var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 
 var weatherHost = "api.weather.yandex.ru";
-var weatherPath = "/v1/informers?lat=57&lon=65&lang=ru_RU";
+var weatherPath = "/v1/informers";//?lat=57&lon=65&lang=ru_RU";
 var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
 var CMD = {
 	setWebHook:"setWebhook",
 	getUpdates:"getUpdates",
-	sendMessage:"sendMessage"
+	sendMessage:"sendMessage",
+	chatAction:"chatAction"
 };
 
 var bot_commands={
 	'/start':{
 		descripion:'Начать работу с ботом',
 		handler:
-			(host, path, header, chat_id, data)=>{
+			(chat_id, data)=>{
 				var answer="Hello, "+ data.message.from.first_name;
-				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
 	'/help':{
 		descripion:'Помощь',
 		handler:
-			(host, path, header, chat_id, data)=>{
+			(chat_id, data)=>{
 				var answer="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
-				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
 	'/weather':{
 		descripion:'Погода',
 		handler:
-			(host, path, header, chat_id)=>{
+			(chat_id, data)=>{
+				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.chatAction, {"method": CMD.chatAction, "chat_id":chat_id, "action":"find_location"})
+				.then(
+					(data)=>{
+						data=JSON.parse(data);
+						sendHttpRequest(weatherHost, weatherPath+"?lat="+data.latitude+&lon=data.longitude+&lang=ru_RU, weatherHeader)
+						.then(
+							(data)=>{
+								data=JSON.parse(data);
+								var answer="Текущая температура: " + data.fact.temp+'\n'
+									+"Ощущается как: " + data.fact.feels_like+'\n'
+									+"Ветер: " + data.fact.wind_speed;
+								sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+							},
+							(error)=>{
+								sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('})
+							}
+						)
+					},
+					(data)=>{
+
+					}
+				);
+			}
+	},
+	'undefined':{
+		descripion:'Неизвестная команда',
+		handler:
+			(host, path, header, chat_id, data)=>{
+				var answer="Неизвестная команда, воспользуйтесь справкой /help";
+				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+			}
+	}
+};
+
+/*	'/weather':{
+		descripion:'Погода',
+		handler:
+			(host, path, header, chat_id, data)=>{
 				sendHttpRequest(host, path, header)
 				.then(
 					(data)=>{
@@ -48,19 +87,15 @@ var bot_commands={
 						var answer="Текущая температура: " + data.fact.temp+'\n'
 							+"Ощущается как: " + data.fact.feels_like+'\n'
 							+"Ветер: " + data.fact.wind_speed;
-						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 					},
 					(error)=>{
-						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":'Что-то не получилось :-('
+						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('
 					}
 				)
 			});
 		}
-	}
-};
-
-
-
+	},*/
 function sendJSONRequest(host, path, data){
 	return new Promise((resolve,reject)=>{
 		var options = {
@@ -78,11 +113,11 @@ function sendJSONRequest(host, path, data){
 				answer+=data;
 			});
 			res.on('end',()=>{
-        //resolve(answer);
-    });
+        		//resolve(answer);
+    		});
 			res.on('error',()=>{
-        //reject(answer);
-    })
+        		//reject(answer);
+    		})
 		});
 		req.write(JSON.stringify(data));
 		req.end();
@@ -120,27 +155,19 @@ function reqParse(data){
 	var text = data.message.text;
 	var entities={};
 	(data.message.entities==undefined)?null:entities = data.message.entities[0];
-	var answer = {"method": "sendMessage", "chat_id":data.message.chat.id, "text":''};
-
 	if(entities.type=='bot_command'){
 		switch(text.split(' ')[0].toLowerCase()) {
 			case '/start':
 			case '/help':
 			case '/weather':
-				eventer.emit(text.split(' ')[0].toLowerCase(), weatherHost, weatherPath, weatherHeader, data.message.chat.id, data);
+				eventer.emit(text.split(' ')[0].toLowerCase(),data.message.chat.id, data);
 				break;
 			default:
-				answer["text"]="Я не знаю такой команды, "+data.message.from.first_name;
+				eventer.emit('undefined',data.message.chat.id, data);
 				break;
 		};
-	}else{
-		return 0;
 	}
-	return JSON.stringify(answer);
-}
-
-function botResponse(){
-
+	return 0;
 }
 
 function Server(){
@@ -165,6 +192,7 @@ function Server(){
 eventer.on('/weather',bot_commands['/weather'].handler);
 eventer.on('/start',bot_commands['/start'].handler);
 eventer.on('/help',bot_commands['/help'].handler);
+eventer.on('undefined',bot_commands['undefined'].handler);
 
 sendHttpRequest(telegram, "/bot"+token+"/"+CMD.setWebHook+"?url="+webHookPath)
 .then(Server,(error)=>{
