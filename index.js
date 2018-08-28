@@ -113,10 +113,10 @@ function sendJSONRequest(host, path, data){
 				answer+=data;
 			});
 			res.on('end',()=>{
-        		//resolve(answer);
+        		resolve(answer);
     		});
 			res.on('error',()=>{
-        		//reject(answer);
+        		reject(answer);
     		})
 		});
 		req.write(JSON.stringify(data));
