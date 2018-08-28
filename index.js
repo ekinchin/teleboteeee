@@ -36,7 +36,7 @@ var bot_commands={
 			}
 				,(error)=>{
 					sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":'Что-то не получилось :-('});
-			}
+			});
 	}
 };
 
