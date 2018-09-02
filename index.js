@@ -2,6 +2,7 @@
 
 var http = require('http');
 var https = require('https');
+const url = require('url');
 
 var EventEmitter = require('events').EventEmitter;
 var eventer = new EventEmitter;
@@ -13,6 +14,17 @@ var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_
 var weatherHost = "api.weather.yandex.ru";
 var weatherPath = "/v1/informers?lat=57&lon=65&lang=ru_RU";
 var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
+
+const telegramUrl = new URL("https://api.telegram.org");
+telegramUrl.pathname = token;
+console.log(telegramUrl);
+
+const weatherUrl = new URL("https://api.weather.yandex.ru");
+weatherUrl.pathname="/v1/informers";
+weatherUrl.searchParams.append('lat','57');
+weatherUrl.searchParams.append('lon','65');
+weatherUrl.searchParams.append('lang','ru_RU');
+console.log(weatherUrl);
 
 var CMD = {
 	setWebHook:"setWebhook",
@@ -41,7 +53,7 @@ var bot_commands={
 		descripion:'Погода',
 		handler:
 			(chat_id, data)=>{
-				sendHttpRequest(weatherHost, weatherPath, weatherHeader)
+				sendHttpRequest(weatherUrl.hostname, weatherUrl.pathname+weatherUrlsearch, weatherHeader)
 				.then(
 					(data)=>{
 						data=JSON.parse(data);
