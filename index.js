@@ -32,7 +32,9 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="Hello, "+ data.message.from.first_name;
-				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				//sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+			}
 			}
 	},
 	'/help':{
@@ -40,7 +42,7 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
-				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
 	'/weather':{
@@ -54,10 +56,10 @@ var bot_commands={
 						var answer="Текущая температура: " + data.fact.temp+'\n'
 							+"Ощущается как: " + data.fact.feels_like+'\n'
 							+"Ветер: " + data.fact.wind_speed;
-						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+						sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 					},
 					(error)=>{
-						sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('
+						sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('
 					}
 				)
 			});
@@ -68,7 +70,7 @@ var bot_commands={
 		handler:
 			(host, path, header, chat_id, data)=>{
 				var answer="Неизвестная команда, воспользуйтесь справкой /help";
-				sendJSONRequest(telegram,"/bot"+token, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
 			}
 	}
 };
