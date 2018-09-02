@@ -9,23 +9,16 @@ var EventEmitter = require('events').EventEmitter;
 var eventer = new EventEmitter;
 
 var token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
-var telegram = "api.telegram.org";
-var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
-
-var weatherHost = "api.weather.yandex.ru";
-var weatherPath = "/v1/informers?lat=57&lon=65&lang=ru_RU";
-var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
-
 const telegramUrl = new url.URL("https://api.telegram.org");
-telegramUrl.pathname = token;
-console.log(telegramUrl);
+telegramUrl.pathname = 'bot'+token;
+var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 
 const weatherUrl = new url.URL("https://api.weather.yandex.ru");
 weatherUrl.pathname="/v1/informers";
 weatherUrl.searchParams.append('lat','57');
 weatherUrl.searchParams.append('lon','65');
 weatherUrl.searchParams.append('lang','ru_RU');
-console.log(weatherUrl);
+var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
 var CMD = {
 	setWebHook:"setWebhook",
@@ -80,12 +73,12 @@ var bot_commands={
 	}
 };
 
-function sendJSONRequest(host, path, data){
+function sendJSONRequest(url, data){
 	return new Promise((resolve,reject)=>{
 		var options = {
-			hostname: host,
+			hostname: url.hostname,
 			port: 443,
-			path:path,
+			path:url.pathname+url.search,
 			method:'POST',
 			headers:{
 				'Content-Type':'application/json'
@@ -108,12 +101,12 @@ function sendJSONRequest(host, path, data){
 	});
 }
 
-function sendHttpRequest(host, path,header){
+function sendHttpRequest(url, header){
 	return new Promise((resolve,reject)=>{
 		var options = {
-			hostname: host,
+			hostname: url.hostname,
 			port: 443,
-			path:path,
+			path:url.pathname+url.search,
 			method:'GET'
 		};
 		if(header!=undefined){
@@ -175,7 +168,12 @@ eventer.on('/start',bot_commands['/start'].handler);
 eventer.on('/help',bot_commands['/help'].handler);
 eventer.on('undefined',bot_commands['undefined'].handler);
 
-sendHttpRequest(telegram, "/bot"+token+"/"+CMD.setWebHook+"?url="+webHookPath)
+const setWebHookUrl = new url.URL("https://api.telegram.org");
+setWebHookUrl.pathname = 'bot'+token + CMD.setWebHook;
+setWebHookUrl.searchParams.append('url',"https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc");
+console.log(setWebHookUrl);
+
+sendHttpRequest(setWebHookUrl)
 .then(Server,(error)=>{
 	console.log("ERROR",error);
 });
