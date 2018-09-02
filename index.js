@@ -54,7 +54,7 @@ var bot_commands={
 		descripion:'Погода',
 		handler:
 			(chat_id, data)=>{
-				sendHttpRequest(weatherUrl.hostname, weatherUrl.pathname+weatherUrlsearch, weatherHeader)
+				sendHttpRequest(weatherUrl.hostname, weatherUrl.pathname+weatherUrl.search, weatherHeader)
 				.then(
 					(data)=>{
 						data=JSON.parse(data);
