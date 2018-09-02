@@ -16,7 +16,7 @@ var weatherHost = "api.weather.yandex.ru";
 var weatherPath = "/v1/informers?lat=57&lon=65&lang=ru_RU";
 var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
-const telegramUrl = new URL("https://api.telegram.org");
+const telegramUrl = new url.URL("https://api.telegram.org");
 telegramUrl.pathname = token;
 console.log(telegramUrl);
 
