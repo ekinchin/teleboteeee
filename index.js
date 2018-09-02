@@ -3,6 +3,7 @@
 var http = require('http');
 var https = require('https');
 const url = require('url');
+console.log(url);
 
 var EventEmitter = require('events').EventEmitter;
 var eventer = new EventEmitter;
