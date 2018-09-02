@@ -20,7 +20,7 @@ const telegramUrl = new url.URL("https://api.telegram.org");
 telegramUrl.pathname = token;
 console.log(telegramUrl);
 
-const weatherUrl = new URL("https://api.weather.yandex.ru");
+const weatherUrl = new url.URL("https://api.weather.yandex.ru");
 weatherUrl.pathname="/v1/informers";
 weatherUrl.searchParams.append('lat','57');
 weatherUrl.searchParams.append('lon','65');
