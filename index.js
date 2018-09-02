@@ -35,7 +35,6 @@ var bot_commands={
 				//sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
-			}
 	},
 	'/help':{
 		descripion:'Помощь',
