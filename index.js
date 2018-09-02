@@ -68,7 +68,7 @@ var bot_commands={
 		handler:
 			(host, path, header, chat_id, data)=>{
 				var answer="Неизвестная команда, воспользуйтесь справкой /help";
-				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+				sendJSONRequest(telegram,"/bot"+token, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
 			}
 	}
 };
@@ -171,7 +171,6 @@ eventer.on('undefined',bot_commands['undefined'].handler);
 const setWebHookUrl = new url.URL("https://api.telegram.org");
 setWebHookUrl.pathname = 'bot'+token + CMD.setWebHook;
 setWebHookUrl.searchParams.append('url',"https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc");
-console.log(setWebHookUrl);
 
 sendHttpRequest(setWebHookUrl)
 .then(Server,(error)=>{
