@@ -8,9 +8,15 @@ console.log(url);
 var EventEmitter = require('events').EventEmitter;
 var eventer = new EventEmitter;
 
+var CMD = {
+	setWebHook:"setWebhook",
+	getUpdates:"getUpdates",
+	sendMessage:"sendMessage"
+};
+
 var token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 const telegramUrl = new url.URL("https://api.telegram.org");
-telegramUrl.pathname = 'bot'+token;
+telegramUrl.pathname = 'bot'+token +"/"+CMD.sendMessage;
 var webHookPath="https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 
 const weatherUrl = new url.URL("https://api.weather.yandex.ru");
@@ -20,11 +26,7 @@ weatherUrl.searchParams.append('lon','65');
 weatherUrl.searchParams.append('lang','ru_RU');
 var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
-var CMD = {
-	setWebHook:"setWebhook",
-	getUpdates:"getUpdates",
-	sendMessage:"sendMessage"
-};
+
 
 var bot_commands={
 	'/start':{
