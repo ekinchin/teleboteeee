@@ -143,6 +143,7 @@ function reqParse(data){
 		switch(text.split(' ')[0].toLowerCase()) {
 			case '/start':
 			case '/help':
+			case '/location':
 			case '/weather':
 				eventer.emit(text.split(' ')[0].toLowerCase(),data.message.chat.id, data);
 				break;
