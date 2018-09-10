@@ -47,20 +47,34 @@ var bot_commands={
 		descripion:'Погода',
 		handler:
 			(chat_id, data)=>{
-				sendHttpRequest(weatherUrl, weatherHeader)
-				.then(
-					(data)=>{
-						data=JSON.parse(data);
-						var answer="Текущая температура: " + data.fact.temp+'\n'
-							+"Ощущается как: " + data.fact.feels_like+'\n'
-							+"Ветер: " + data.fact.wind_speed;
-						sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
-					},
-					(error)=>{
-						sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('
-					}
-				)
-			});
+				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава", "reply_markup":{"keyboard":
+																											[[{"text":"Отправить локейшн",
+																											"request_location":true}]],
+																											"resize_keyboard":true,
+																											"selective":true
+																										}})
+				.then((data)=>{
+					data=JSON.parse(data);
+					let lat=data.location.latitude;
+					let lang=data.location.longitude;
+					weatherUrl.searchParams.delete('lat');
+					weatherUrl.searchParams.delete('lon');
+					weatherUrl.searchParams.append('lat', lat);
+					weatherUrl.searchParams.append('lon', lang);
+					sendHttpRequest(weatherUrl, weatherHeader)
+					.then(
+						(data)=>{
+							data=JSON.parse(data);
+							var answer="Текущая температура: " + data.fact.temp+'\n'
+									+"Ощущается как: " + data.fact.feels_like+'\n'
+									+"Ветер: " + data.fact.wind_speed;
+							sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+						},
+						(error)=>{
+							sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
+						}
+					);
+				})
 		}
 	},
 	'undefined':{
@@ -74,15 +88,12 @@ var bot_commands={
 	'/location':{
 		descripion:'отработка получения локации',
 		handler:(chat_id, data)=>{
-			sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава"
-																										, "reply_markup":{"keyboard":
+			sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава", "reply_markup":{"keyboard":
 																											[[{"text":"Отправить локейшн",
 																											"request_location":true}]],
 																											"resize_keyboard":true,
 																											"selective":true
-																										}
-										}
-							)
+																										}})
 			.then((data)=>{
 				console.log(data);
 			})
