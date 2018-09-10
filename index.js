@@ -77,7 +77,7 @@ var bot_commands={
 			sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава"
 																										, "reply_markup":{"keyboard":
 																											[[{"text":"Отправить локейшн",
-																											"request_location":"True"}]]
+																											"request_location":true}]]
 																										}
 										}
 							)
