@@ -55,6 +55,7 @@ var bot_commands={
 																										}})
 				.then((data)=>{
 					data=JSON.parse(data);
+					console.log(data);
 					let lat=data.location.latitude;
 					let lang=data.location.longitude;
 					weatherUrl.searchParams.delete('lat');
@@ -157,7 +158,6 @@ function sendHttpRequest(url, header){
 
 function reqParse(data){
 	data=JSON.parse(data);
-	console.log(data);
 	var text = data.message.text;
 	var entities={};
 	(data.message.entities==undefined)?null:entities = data.message.entities[0];
