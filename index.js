@@ -71,7 +71,7 @@ var bot_commands={
 				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
-	'location':{
+	'/location':{
 		descripion:'отработка получения локации',
 		handler:(chat_id, data)=>{
 			sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "reply_markup":{"text":"Отправить локейшн","request_location":"True"}});
@@ -173,6 +173,7 @@ function Server(){
 eventer.on('/weather',bot_commands['/weather'].handler);
 eventer.on('/start',bot_commands['/start'].handler);
 eventer.on('/help',bot_commands['/help'].handler);
+eventer.on('/location',bot_commands['/location'].handler);
 eventer.on('undefined',bot_commands['undefined'].handler);
 
 const setWebHookUrl = new url.URL("https://api.telegram.org");
