@@ -19,9 +19,11 @@ telegramUrl.pathname = 'bot'+token +"/"+CMD.sendMessage;
 
 const weatherUrl = new url.URL("https://api.weather.yandex.ru");
 weatherUrl.pathname="/v1/informers";
+
 weatherUrl.searchParams.append('lat','57');
 weatherUrl.searchParams.append('lon','65');
 weatherUrl.searchParams.append('lang','ru_RU');
+
 var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
 var bot_commands={
@@ -30,7 +32,6 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="Hello, "+ data.message.from.first_name;
-				//sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
@@ -65,10 +66,16 @@ var bot_commands={
 	'undefined':{
 		descripion:'Неизвестная команда',
 		handler:
-			(host, path, header, chat_id, data)=>{
+			(chat_id, data)=>{
 				var answer="Неизвестная команда, воспользуйтесь справкой /help";
-				sendJSONRequest(telegram,"/bot"+token+"/"+CMD.sendMessage, {"method": "sendMessage", "chat_id":chat_id, "text":answer});
+				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
+	},
+	'location':{
+		descripion:'отработка получения локации',
+		handler:(chat_id, data)=>{
+			sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "reply_markup":{"text":"Отправить локейшн","request_location":"True"}});
+		}
 	}
 };
 
@@ -128,6 +135,7 @@ function sendHttpRequest(url, header){
 
 function reqParse(data){
 	data=JSON.parse(data);
+	console.log(data);
 	var text = data.message.text;
 	var entities={};
 	(data.message.entities==undefined)?null:entities = data.message.entities[0];
