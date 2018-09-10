@@ -75,9 +75,9 @@ var bot_commands={
 		descripion:'отработка получения локации',
 		handler:(chat_id, data)=>{
 			sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава"
-																										, "reply_markup":{
-																											{{"text":"Отправить локейшн",
-																											"request_location":"True"}}
+																										, "reply_markup":{"keyboard":
+																											[{"text":"Отправить локейшн",
+																											"request_location":"True"}]
 																										}
 										}
 							)
