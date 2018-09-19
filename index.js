@@ -47,21 +47,21 @@ var bot_commands={
 		descripion:'Погода',
 		handler:
 			(chat_id, data)=>{
-				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава", "reply_markup":{"keyboard":
-																											[[{"text":"Отправить локейшн",
-																											"request_location":true}]],
-																											"resize_keyboard":true,
-																											"selective":true
-																										}})
-				.then((data)=>{
-					data=JSON.parse(data);
-					console.log(data);
+				// sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава", "reply_markup":{"keyboard":
+				// 																							[[{"text":"Отправить локейшн",
+				// 																							"request_location":true}]],
+				// 																							"resize_keyboard":true,
+				// 																							"selective":true
+				// 																						}})
+				// .then((data)=>{
+				// 	data=JSON.parse(data);
+				// 	console.log(data);
 					let lat=data.location.latitude;
 					let lang=data.location.longitude;
 					weatherUrl.searchParams.delete('lat');
 					weatherUrl.searchParams.delete('lon');
-					weatherUrl.searchParams.append('lat', lat);
-					weatherUrl.searchParams.append('lon', lang);
+					weatherUrl.searchParams.append('lat', 57);
+					weatherUrl.searchParams.append('lon', 65);
 					sendHttpRequest(weatherUrl, weatherHeader)
 					.then(
 						(data)=>{
@@ -75,7 +75,7 @@ var bot_commands={
 							sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
 						}
 					);
-				})
+				// })
 		}
 	},
 	'undefined':{
