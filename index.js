@@ -56,8 +56,8 @@ var bot_commands={
 				// .then((data)=>{
 				// 	data=JSON.parse(data);
 				// 	console.log(data);
-					let lat=data.location.latitude;
-					let lang=data.location.longitude;
+					// let lat=data.location.latitude;
+					// let lang=data.location.longitude;
 					weatherUrl.searchParams.delete('lat');
 					weatherUrl.searchParams.delete('lon');
 					weatherUrl.searchParams.append('lat', 57);
