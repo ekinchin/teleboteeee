@@ -60,7 +60,7 @@ var bot_commands={
 
 				let weatherRequest;
 				console.log(data);
-				if(data.text.split(' ')[1]==undefined){
+				if(data.message.text.split(' ')[1]==undefined){
 					weatherUrl.searchParams.delete('lat');
 					weatherUrl.searchParams.delete('lon');
 					weatherUrl.searchParams.append('lat', 57);
