@@ -56,7 +56,7 @@ var bot_commands={
 				weatherUrl.searchParams.delete('lon');
 				weatherUrl.searchParams.append('lat', 57);
 				weatherUrl.searchParams.append('lon', 65);
-				console.log(JSON.parse(data););
+				console.log(JSON.parse(data));
 				sendHttpRequest(weatherUrl, weatherHeader)
 				.then(
 					(data)=>{
