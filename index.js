@@ -56,9 +56,15 @@ var bot_commands={
 				weatherUrl.searchParams.delete('lon');
 				weatherUrl.searchParams.append('lat', 57);
 				weatherUrl.searchParams.append('lon', 65);
-				console.log(data.entities);
-				sendHttpRequest(weatherUrl, weatherHeader)
-				.then(
+				geoUrl.searchParams.delete('geocode');
+
+				let weatherRequest;
+				if('geocode'data.text.split(' ')[1]==undefined){
+					weatherUrl.searchParams.delete('lat');
+					weatherUrl.searchParams.delete('lon');
+					weatherUrl.searchParams.append('lat', 57);
+					weatherUrl.searchParams.append('lon', 65);
+					sendHttpRequest(weatherUrl, weatherHeader).then(
 					(data)=>{
 						data=JSON.parse(data);
 						var answer="Текущая температура: " + data.fact.temp+'\n'
@@ -70,7 +76,29 @@ var bot_commands={
 						sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
 					}
 				);
-			// })
+				}else{
+					geoUrl.searchParams.delete('geocode');
+					geoUrl.searchParams.append('geocode'data.text.split(' ')[1].toLowerCase());
+					sendHttpRequest(geoUrl)
+					.then(
+						(data)=>{
+							data=JSON.parse(data);
+							console.log("геопарсинг",data);
+							sendHttpRequest(weatherUrl, weatherHeader)
+							.then(
+								(data)=>{
+									data=JSON.parse(data);
+									var answer="Текущая температура: " + data.fact.temp+'\n'
+											+"Ощущается как: " + data.fact.feels_like+'\n'
+											+"Ветер: " + data.fact.wind_speed;
+									sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+								},
+								(error)=>{
+									sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
+								}
+							);
+						});
+				}
 		}
 	},
 	'undefined':{
