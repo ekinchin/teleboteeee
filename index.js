@@ -56,11 +56,11 @@ var bot_commands={
 				weatherUrl.searchParams.delete('lon');
 				weatherUrl.searchParams.append('lat', 57);
 				weatherUrl.searchParams.append('lon', 65);
+				console.log(data);
 				sendHttpRequest(weatherUrl, weatherHeader)
 				.then(
 					(data)=>{
 						data=JSON.parse(data);
-						console.log(data);
 						var answer="Текущая температура: " + data.fact.temp+'\n'
 								+"Ощущается как: " + data.fact.feels_like+'\n'
 								+"Ветер: " + data.fact.wind_speed;
