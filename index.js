@@ -182,7 +182,7 @@ function sendRequest(url, header, data){
 			method:'GET',
 			headers:header
 		};
-		console.log(options.headers['Content-Type']);
+		console.log(options);
 
 		const req = https.request(options, (res) => {
 			var answer='';
@@ -196,10 +196,7 @@ function sendRequest(url, header, data){
         		reject(answer);
     		})
 		});
-		if(options.headers['Content-Type']=='application/json'){
-			console.log("json, бля");
-			req.write(JSON.stringify(data));
-		}
+		if(options.headers['Content-Type']=='application/json')	req.write(JSON.stringify(data));
 		req.end();
 	});
 }
