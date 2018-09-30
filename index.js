@@ -181,7 +181,7 @@ function sendRequest(url, header, data){
 			port: 443,
 			path:url.pathname+url.search,
 			method:'GET',
-			headers:header
+			headers:{header}
 		};
 		console.log(options);
 
