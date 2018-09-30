@@ -181,6 +181,7 @@ function sendRequest(url, headers, data){
 			port: 443,
 			path:url.pathname+url.search,
 			method:'GET',
+			headers:{}
 		};
 		let head;
 		for (var header in headers) {
