@@ -180,8 +180,7 @@ function sendRequest(url, headers, data){
 			hostname: url.hostname,
 			port: 443,
 			path:url.pathname+url.search,
-			method:'GET',
-			headers:{}
+			method:'GET'
 		};
 		let head;
 		for (var header in headers) {
@@ -202,7 +201,9 @@ function sendRequest(url, headers, data){
         		reject(answer);
     		})
 		});
-		if('Content-Type' in  options.headers) (options.headers['Content-Type']=='application/json')?req.write(JSON.stringify(data)):null;
+		if(options.headers!=undefined){
+			if('Content-Type' in  options.headers) (options.headers['Content-Type']=='application/json')?req.write(JSON.stringify(data)):null;
+		}
 		req.end();
 	});
 }
