@@ -182,7 +182,7 @@ function sendRequest(url, header, data){
 			method:'GET',
 			headers:header
 		};
-		console.log(url, options.headers, data);
+		console.log(options.headers['Content-Type']);
 
 		const req = https.request(options, (res) => {
 			var answer='';
