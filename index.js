@@ -24,7 +24,7 @@ weatherUrl.searchParams.append('lat','57');
 weatherUrl.searchParams.append('lon','65');
 weatherUrl.searchParams.append('lang','ru_RU');
 
-const geoUrl = new.URL("https://geocode-maps.yandex.ru");
+const geoUrl = new url.URL("https://geocode-maps.yandex.ru");
 weatherUrl.pathname="/1.x";
 weatherUrl.searchParams.append('format','json');
 weatherUrl.searchParams.append('results','1');
