@@ -23,9 +23,9 @@ weatherUrl.searchParams.append('lang','ru_RU');
 var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
 const geoUrl = new url.URL("https://geocode-maps.yandex.ru");
-weatherUrl.pathname="/1.x";
-weatherUrl.searchParams.append('format','json');
-weatherUrl.searchParams.append('results','1');
+geoUrl.pathname="/1.x";
+geoUrl.searchParams.append('format','json');
+geoUrl.searchParams.append('results','1');
 //https://geocode-maps.yandex.ru/1.x/?format=json&results=1&geocode=%D1%82%D1%8E%D0%BC%D0%B5%D0%BD%D1%8C
 
 
@@ -56,7 +56,6 @@ var bot_commands={
 				weatherUrl.searchParams.delete('lon');
 				weatherUrl.searchParams.append('lat', 57);
 				weatherUrl.searchParams.append('lon', 65);
-				console.log(weatherUrl);
 				sendHttpRequest(weatherUrl, weatherHeader)
 				.then(
 					(data)=>{
