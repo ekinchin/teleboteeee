@@ -201,7 +201,7 @@ function sendRequest(url, headers, data){
         		reject(answer);
     		})
 		});
-		if(options.headers['Content-Type']=='application/json')	req.write(JSON.stringify(data));
+		if('Content-Type' in  options.headers) (options.headers['Content-Type']=='application/json')?req.write(JSON.stringify(data)):null;
 		req.end();
 	});
 }
