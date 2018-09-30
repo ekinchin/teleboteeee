@@ -174,7 +174,6 @@ function sendHttpRequest(url, header){
 }
 
 function sendRequest(url, header, data){
-	console.log(url, header, data);
 	return new Promise((resolve,reject)=>{
 		var options = {
 			hostname: url.hostname,
@@ -183,6 +182,7 @@ function sendRequest(url, header, data){
 			method:'GET',
 			headers:header
 		};
+		console.log(url, options.headers, data);
 
 		const req = https.request(options, (res) => {
 			var answer='';
