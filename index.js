@@ -19,10 +19,8 @@ telegramUrl.pathname = 'bot'+token +"/"+CMD.sendMessage;
 
 const weatherUrl = new url.URL("https://api.weather.yandex.ru");
 weatherUrl.pathname="/v1/informers";
-
-weatherUrl.searchParams.append('lat','57');
-weatherUrl.searchParams.append('lon','65');
 weatherUrl.searchParams.append('lang','ru_RU');
+var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
 const geoUrl = new url.URL("https://geocode-maps.yandex.ru");
 weatherUrl.pathname="/1.x";
@@ -31,7 +29,7 @@ weatherUrl.searchParams.append('results','1');
 //https://geocode-maps.yandex.ru/1.x/?format=json&results=1&geocode=%D1%82%D1%8E%D0%BC%D0%B5%D0%BD%D1%8C
 
 
-var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
+
 
 var bot_commands={
 	'/start':{
@@ -54,36 +52,26 @@ var bot_commands={
 		descripion:'Погода',
 		handler:
 			(chat_id, data)=>{
-				// sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава", "reply_markup":{"keyboard":
-				// 																							[[{"text":"Отправить локейшн",
-				// 																							"request_location":true}]],
-				// 																							"resize_keyboard":true,
-				// 																							"selective":true
-				// 																						}})
-				// .then((data)=>{
-				// 	data=JSON.parse(data);
-				 	//console.log(data);
-					// let lat=data.location.latitude;
-					// let lang=data.location.longitude;
-					weatherUrl.searchParams.delete('lat');
-					weatherUrl.searchParams.delete('lon');
-					weatherUrl.searchParams.append('lat', 57);
-					weatherUrl.searchParams.append('lon', 65);
-					sendHttpRequest(weatherUrl, weatherHeader)
-					.then(
-						(data)=>{
-							data=JSON.parse(data);
-							console.log(data);
-							var answer="Текущая температура: " + data.fact.temp+'\n'
-									+"Ощущается как: " + data.fact.feels_like+'\n'
-									+"Ветер: " + data.fact.wind_speed;
-							sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
-						},
-						(error)=>{
-							sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
-						}
-					);
-				// })
+				weatherUrl.searchParams.delete('lat');
+				weatherUrl.searchParams.delete('lon');
+				weatherUrl.searchParams.append('lat', 57);
+				weatherUrl.searchParams.append('lon', 65);
+				console.log(weatherUrl);
+				sendHttpRequest(weatherUrl, weatherHeader)
+				.then(
+					(data)=>{
+						data=JSON.parse(data);
+						console.log(data);
+						var answer="Текущая температура: " + data.fact.temp+'\n'
+								+"Ощущается как: " + data.fact.feels_like+'\n'
+								+"Ветер: " + data.fact.wind_speed;
+						sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+					},
+					(error)=>{
+						sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
+					}
+				);
+			// })
 		}
 	},
 	'undefined':{
