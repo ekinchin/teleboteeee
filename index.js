@@ -180,7 +180,7 @@ function sendRequest(url, headers, data){
 			hostname: url.hostname,
 			port: 443,
 			path:url.pathname+url.search,
-			method:'GET'
+			method:'POST'
 		};
 		options.headers=headers;
 		console.log(options);
