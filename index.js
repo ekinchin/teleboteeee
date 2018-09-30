@@ -37,7 +37,7 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="Hello, "+ data.message.from.first_name;
-				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 			}
 	},
 	'/help':{
@@ -45,7 +45,7 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
-				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 			}
 	},
 	'/weather':{
@@ -57,38 +57,38 @@ var bot_commands={
 					weatherUrl.searchParams.delete('lon');
 					weatherUrl.searchParams.append('lat', 57);
 					weatherUrl.searchParams.append('lon', 65);
-					sendHttpRequest(weatherUrl, weatherHeader)
+					sendHttpRequest(weatherUrl, weatherHeader, null, 'GET')
 					.then(
 						(data)=>{
 							data=JSON.parse(data);
 							var answer="Текущая температура: " + data.fact.temp+'\n'
 									+"Ощущается как: " + data.fact.feels_like+'\n'
 									+"Ветер: " + data.fact.wind_speed;
-							sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+							sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 						},
 						(error)=>{
-							sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
+							sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('}, 'POST');
 						}
 					);
 				}else{
 					geoUrl.searchParams.delete('geocode');
 					geoUrl.searchParams.append('geocode',data.message.text.split(' ')[1].toLowerCase());
-					sendHttpRequest(geoUrl)
+					sendHttpRequest(geoUrl,{},null,'GET')
 					.then(
 						(data)=>{
 							data=JSON.parse(data);
 							console.log("геопарсинг",data);
-							sendHttpRequest(weatherUrl, weatherHeader)
+							sendHttpRequest(weatherUrl, weatherHeader, null, 'GET')
 							.then(
 								(data)=>{
 									data=JSON.parse(data);
 									var answer="Текущая температура: " + data.fact.temp+'\n'
 											+"Ощущается как: " + data.fact.feels_like+'\n'
 											+"Ветер: " + data.fact.wind_speed;
-									sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+									sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 								},
 								(error)=>{
-									sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
+									sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('}, 'POST');
 								}
 							);
 						});
@@ -100,7 +100,7 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="Неизвестная команда, воспользуйтесь справкой /help";
-				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 			}
 	},
 	'/location':{
@@ -111,7 +111,7 @@ var bot_commands={
 																											"request_location":true}]],
 																											"resize_keyboard":true,
 																											"selective":true
-																										}})
+																										}}, 'POST')
 			.then((data)=>{
 				console.log(data);
 			})
@@ -119,69 +119,14 @@ var bot_commands={
 	}
 };
 
-/*function sendJSONRequest(url, data){
+function sendHttpRequest(url, headers, data, method){
 	return new Promise((resolve,reject)=>{
 		var options = {
 			hostname: url.hostname,
 			port: 443,
-			path:url.pathname+url.search,
-			method:'POST',
-			headers:{
-				'Content-Type':'application/json'
-			}
+			path:url.pathname+url.search
 		};
-		console.log(options);
-		const req = https.request(options, (res) => {
-			var answer='';
-			res.on('data', (data) => {
-				answer+=data;
-			});
-			res.on('end',()=>{
-        		resolve(answer);
-    		});
-			res.on('error',()=>{
-        		reject(answer);
-    		})
-		});
-		req.write(JSON.stringify(data));
-		req.end();
-	});
-}
-
-function sendHttpRequest(url, header){
-	return new Promise((resolve,reject)=>{
-		var options = {
-			hostname: url.hostname,
-			port: 443,
-			path:url.pathname+url.search,
-			method:'GET'
-		};
-		if(header!=undefined){
-			options.headers=header;
-		}
-		https.request(options, (res) => {
-			var answer='';
-			res.on('data', (data) => {
-				answer+=data;
-			});
-			res.on('end',()=>{
-				resolve(answer);
-			});
-			res.on('error',()=>{
-				reject(answer);
-			})
-		}).end();
-	});
-}*/
-
-function sendHttpRequest(url, headers, data){
-	return new Promise((resolve,reject)=>{
-		var options = {
-			hostname: url.hostname,
-			port: 443,
-			path:url.pathname+url.search,
-			method:'POST'
-		};
+		options.method=method
 		options.headers=headers;
 		console.log(options);
 
@@ -256,7 +201,7 @@ const setWebHookUrl = new url.URL("https://api.telegram.org");
 setWebHookUrl.pathname = 'bot'+token + CMD.setWebHook;
 setWebHookUrl.searchParams.append('url',"https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc");
 
-sendHttpRequest(setWebHookUrl,{})
+sendHttpRequest(setWebHookUrl,{},null,'GET')
 .then(Server,(error)=>{
 	console.log("ERROR",error);
 });
