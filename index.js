@@ -45,7 +45,7 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
-				sendRequest(telegramUrl, {}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
 	'/weather':{
@@ -174,15 +174,15 @@ function sendHttpRequest(url, header){
 }
 
 function sendRequest(url, header, data){
+	console.log(url, header, data);
 	return new Promise((resolve,reject)=>{
 		var options = {
 			hostname: url.hostname,
 			port: 443,
 			path:url.pathname+url.search,
-			method:'GET'
+			method:'GET',
+			headers:header
 		};
-		if(header!={}) options.headers=header;
-		if(data!=undefined) options.headers['Content-Type']='application/json';
 
 		const req = https.request(options, (res) => {
 			var answer='';
@@ -196,7 +196,7 @@ function sendRequest(url, header, data){
         		reject(answer);
     		})
 		});
-		if(data!=undefined) req.write(JSON.stringify(data));
+		if(options.headers['Content-Type']=='application/json') req.write(JSON.stringify(data));
 		req.end();
 	});
 }
