@@ -45,7 +45,7 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
-				sendRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendRequest(telegramUrl, {}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
 	'/weather':{
@@ -181,10 +181,8 @@ function sendRequest(url, header, data){
 			path:url.pathname+url.search,
 			method:'GET'
 		};
-		if(data!=undefined){
-			options.headers=header;
-			options.headers['Content-Type']='application/json';
-		}
+		if(header!={}) options.headers=header;
+		if(data!=undefined) options.headers['Content-Type']='application/json';
 
 		const req = https.request(options, (res) => {
 			var answer='';
