@@ -59,6 +59,7 @@ var bot_commands={
 				geoUrl.searchParams.delete('geocode');
 
 				let weatherRequest;
+				console.log(data);
 				if(data.text.split(' ')[1]==undefined){
 					weatherUrl.searchParams.delete('lat');
 					weatherUrl.searchParams.delete('lon');
