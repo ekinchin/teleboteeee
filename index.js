@@ -45,7 +45,7 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
-				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
 	'/weather':{
