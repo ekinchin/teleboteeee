@@ -52,31 +52,24 @@ var bot_commands={
 		descripion:'Погода',
 		handler:
 			(chat_id, data)=>{
+				if(data.message.text.split(' ')[1]==undefined){
 				weatherUrl.searchParams.delete('lat');
 				weatherUrl.searchParams.delete('lon');
-				weatherUrl.searchParams.append('lat', 57);
-				weatherUrl.searchParams.append('lon', 65);
-				geoUrl.searchParams.delete('geocode');
-
-				let weatherRequest;
-				console.log(data);
-				if(data.message.text.split(' ')[1]==undefined){
-					weatherUrl.searchParams.delete('lat');
-					weatherUrl.searchParams.delete('lon');
 					weatherUrl.searchParams.append('lat', 57);
 					weatherUrl.searchParams.append('lon', 65);
-					sendHttpRequest(weatherUrl, weatherHeader).then(
-					(data)=>{
-						data=JSON.parse(data);
-						var answer="Текущая температура: " + data.fact.temp+'\n'
-								+"Ощущается как: " + data.fact.feels_like+'\n'
-								+"Ветер: " + data.fact.wind_speed;
-						sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
-					},
-					(error)=>{
-						sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
-					}
-				);
+					sendHttpRequest(weatherUrl, weatherHeader)
+					.then(
+						(data)=>{
+							data=JSON.parse(data);
+							var answer="Текущая температура: " + data.fact.temp+'\n'
+									+"Ощущается как: " + data.fact.feels_like+'\n'
+									+"Ветер: " + data.fact.wind_speed;
+							sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+						},
+						(error)=>{
+							sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
+						}
+					);
 				}else{
 					geoUrl.searchParams.delete('geocode');
 					geoUrl.searchParams.append('geocode',data.message.text.split(' ')[1].toLowerCase());
@@ -180,6 +173,36 @@ function sendHttpRequest(url, header){
 	});
 }
 
+function sendRequest(url, header, data){
+	return new Promise((resolve,reject)=>{
+		var options = {
+			hostname: url.hostname,
+			port: 443,
+			path:url.pathname+url.search,
+			method:'GET'
+		};
+		if(data!=undefined){
+			options.headers=header;
+			options.headers['Content-Type']='application/json';
+		}
+
+		const req = https.request(options, (res) => {
+			var answer='';
+			res.on('data', (data) => {
+				answer+=data;
+			});
+			res.on('end',()=>{
+        		resolve(answer);
+    		});
+			res.on('error',()=>{
+        		reject(answer);
+    		})
+		});
+		if(data!=undefined) req.write(JSON.stringify(data));
+		req.end();
+	});
+}
+
 function reqParse(data){
 	data=JSON.parse(data);
 	var text = data.message.text;
@@ -227,7 +250,7 @@ const setWebHookUrl = new url.URL("https://api.telegram.org");
 setWebHookUrl.pathname = 'bot'+token + CMD.setWebHook;
 setWebHookUrl.searchParams.append('url',"https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc");
 
-sendHttpRequest(setWebHookUrl)
+sendRequest(setWebHookUrl)
 .then(Server,(error)=>{
 	console.log("ERROR",error);
 });
