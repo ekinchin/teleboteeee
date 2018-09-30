@@ -196,7 +196,10 @@ function sendRequest(url, header, data){
         		reject(answer);
     		})
 		});
-		if(options.headers['Content-Type']=='application/json') req.write(JSON.stringify(data));
+		if(options.headers['Content-Type']=='application/json'){
+			console.log("json, бля");
+			req.write(JSON.stringify(data));
+		}
 		req.end();
 	});
 }
