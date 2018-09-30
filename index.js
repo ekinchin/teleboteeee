@@ -182,9 +182,8 @@ function sendRequest(url, headers, data){
 			path:url.pathname+url.search,
 			method:'GET'
 		};
-		console.log(options, headers);
 		options.headers=headers;
-		console.log(options, headers);
+		console.log(options);
 
 		const req = https.request(options, (res) => {
 			var answer='';
@@ -199,7 +198,12 @@ function sendRequest(url, headers, data){
     		})
 		});
 		if(options.headers!=undefined){
-			if('Content-Type' in  options.headers) (options.headers['Content-Type']=='application/json')?req.write(JSON.stringify(data)):null;
+			if('Content-Type' in  options.headers){
+				if(options.headers['Content-Type']=='application/json'){
+					console.log("щас будет врайт!",data);
+					req.write(JSON.stringify(data));
+				}
+			}
 		}
 		req.end();
 	});
