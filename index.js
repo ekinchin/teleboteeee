@@ -73,6 +73,7 @@ var bot_commands={
 					.then(
 						(data)=>{
 							data=JSON.parse(data);
+							console.log(data);
 							var answer="Текущая температура: " + data.fact.temp+'\n'
 									+"Ощущается как: " + data.fact.feels_like+'\n'
 									+"Ветер: " + data.fact.wind_speed;
