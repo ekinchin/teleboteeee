@@ -182,12 +182,7 @@ function sendRequest(url, headers, data){
 			path:url.pathname+url.search,
 			method:'GET'
 		};
-		let head;
-		for (var header in headers) {
-  			head[header] = headers[header];
-		}
-		options.headers=head;
-		console.log(options);
+		console.log(headers);
 
 		const req = https.request(options, (res) => {
 			var answer='';
