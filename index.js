@@ -174,15 +174,17 @@ function sendHttpRequest(url, header){
 	});
 }
 
-function sendRequest(url, header, data){
+function sendRequest(url, headers, data){
 	return new Promise((resolve,reject)=>{
 		var options = {
 			hostname: url.hostname,
 			port: 443,
 			path:url.pathname+url.search,
 			method:'GET',
-			headers:{header}
 		};
+		for (var header in headers) {
+  			options.headers[header] = headers[header];
+		}
 		console.log(options);
 
 		const req = https.request(options, (res) => {
