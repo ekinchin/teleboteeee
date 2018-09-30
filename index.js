@@ -130,6 +130,7 @@ function sendJSONRequest(url, data){
 				'Content-Type':'application/json'
 			}
 		};
+		console.log(options);
 		const req = https.request(options, (res) => {
 			var answer='';
 			res.on('data', (data) => {
