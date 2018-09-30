@@ -78,7 +78,7 @@ var bot_commands={
 				);
 				}else{
 					geoUrl.searchParams.delete('geocode');
-					geoUrl.searchParams.append('geocode'data.text.split(' ')[1].toLowerCase());
+					geoUrl.searchParams.append('geocode',data.text.split(' ')[1].toLowerCase());
 					sendHttpRequest(geoUrl)
 					.then(
 						(data)=>{
