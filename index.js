@@ -37,7 +37,7 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="Hello, "+ data.message.from.first_name;
-				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
 	'/help':{
@@ -53,8 +53,8 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				if(data.message.text.split(' ')[1]==undefined){
-				weatherUrl.searchParams.delete('lat');
-				weatherUrl.searchParams.delete('lon');
+					weatherUrl.searchParams.delete('lat');
+					weatherUrl.searchParams.delete('lon');
 					weatherUrl.searchParams.append('lat', 57);
 					weatherUrl.searchParams.append('lon', 65);
 					sendHttpRequest(weatherUrl, weatherHeader)
@@ -64,10 +64,10 @@ var bot_commands={
 							var answer="Текущая температура: " + data.fact.temp+'\n'
 									+"Ощущается как: " + data.fact.feels_like+'\n'
 									+"Ветер: " + data.fact.wind_speed;
-							sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+							sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 						},
 						(error)=>{
-							sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
+							sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
 						}
 					);
 				}else{
@@ -85,10 +85,10 @@ var bot_commands={
 									var answer="Текущая температура: " + data.fact.temp+'\n'
 											+"Ощущается как: " + data.fact.feels_like+'\n'
 											+"Ветер: " + data.fact.wind_speed;
-									sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+									sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 								},
 								(error)=>{
-									sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
+									sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('});
 								}
 							);
 						});
@@ -100,13 +100,13 @@ var bot_commands={
 		handler:
 			(chat_id, data)=>{
 				var answer="Неизвестная команда, воспользуйтесь справкой /help";
-				sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
+				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer});
 			}
 	},
 	'/location':{
 		descripion:'отработка получения локации',
 		handler:(chat_id, data)=>{
-			sendJSONRequest(telegramUrl, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава", "reply_markup":{"keyboard":
+			sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава", "reply_markup":{"keyboard":
 																											[[{"text":"Отправить локейшн",
 																											"request_location":true}]],
 																											"resize_keyboard":true,
@@ -119,7 +119,7 @@ var bot_commands={
 	}
 };
 
-function sendJSONRequest(url, data){
+/*function sendJSONRequest(url, data){
 	return new Promise((resolve,reject)=>{
 		var options = {
 			hostname: url.hostname,
@@ -172,9 +172,9 @@ function sendHttpRequest(url, header){
 			})
 		}).end();
 	});
-}
+}*/
 
-function sendRequest(url, headers, data){
+function sendHttpRequest(url, headers, data){
 	return new Promise((resolve,reject)=>{
 		var options = {
 			hostname: url.hostname,
@@ -256,7 +256,7 @@ const setWebHookUrl = new url.URL("https://api.telegram.org");
 setWebHookUrl.pathname = 'bot'+token + CMD.setWebHook;
 setWebHookUrl.searchParams.append('url',"https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc");
 
-sendRequest(setWebHookUrl,{})
+sendHttpRequest(setWebHookUrl,{})
 .then(Server,(error)=>{
 	console.log("ERROR",error);
 });
