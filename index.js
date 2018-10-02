@@ -35,7 +35,7 @@ var bot_commands={
 	'/start':{
 		descripion:'Начать работу с ботом',
 		handler:
-			(chat_id, data)=>{
+			async (chat_id, data)=>{
 				var answer="Hello, "+ data.message.from.first_name;
 				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 			}
@@ -43,7 +43,7 @@ var bot_commands={
 	'/help':{
 		descripion:'Помощь',
 		handler:
-			(chat_id, data)=>{
+			async (chat_id, data)=>{
 				var answer="/start - поздороваться\n/weather - текущая погода\n/help - эта справка";
 				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 			}
@@ -51,61 +51,43 @@ var bot_commands={
 	'/weather':{
 		descripion:'Погода',
 		handler:
-			(chat_id, data)=>{
+			async (chat_id, data)=>{
+				let answer;
+				weatherUrl.searchParams.delete('lat');
+				weatherUrl.searchParams.delete('lon');
 				if(data.message.text.split(' ')[1]==undefined){
-					weatherUrl.searchParams.delete('lat');
-					weatherUrl.searchParams.delete('lon');
 					weatherUrl.searchParams.append('lat', 57);
 					weatherUrl.searchParams.append('lon', 65);
-					sendHttpRequest(weatherUrl, weatherHeader, null, 'GET')
-					.then(
-						(data)=>{
-							data=JSON.parse(data);
-							var answer="Текущая температура: " + data.fact.temp+'\n'
-									+"Ощущается как: " + data.fact.feels_like+'\n'
-									+"Ветер: " + data.fact.wind_speed;
-							sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
-						},
-						(error)=>{
-							sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('}, 'POST');
-						}
-					);
 				}else{
 					geoUrl.searchParams.delete('geocode');
 					geoUrl.searchParams.append('geocode',data.message.text.split(' ')[1].toLowerCase());
-					sendHttpRequest(geoUrl,{},null,'GET')
-					.then(
-						(data)=>{
-							data=JSON.parse(data);
-							console.log("геопарсинг",data);
-							sendHttpRequest(weatherUrl, weatherHeader, null, 'GET')
-							.then(
-								(data)=>{
-									data=JSON.parse(data);
-									var answer="Текущая температура: " + data.fact.temp+'\n'
-											+"Ощущается как: " + data.fact.feels_like+'\n'
-											+"Ветер: " + data.fact.wind_speed;
-									sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
-								},
-								(error)=>{
-									sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":'Что-то не получилось :-('}, 'POST');
-								}
-							);
-						});
-				}
+					let location = await sendHttpRequest(geoUrl,{},null,'GET');
+					location = JSON.parse(location);
+					location = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
+					weatherUrl.searchParams.append('lat', location[1]);
+					weatherUrl.searchParams.append('lon', location[0]);
+
+				}					
+				let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, 'GET');
+				weather=JSON.parse(weather);
+				answer = "Текущая температура: " + weather.fact.temp+'\n'
+							+"Ощущается как: " + weather.fact.feels_like+'\n'
+							+"Ветер: " + weather.fact.wind_speed;
+				await sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 		}
 	},
 	'undefined':{
 		descripion:'Неизвестная команда',
 		handler:
-			(chat_id, data)=>{
+			async (chat_id, data)=>{
 				var answer="Неизвестная команда, воспользуйтесь справкой /help";
 				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 			}
 	},
 	'/location':{
 		descripion:'отработка получения локации',
-		handler:(chat_id, data)=>{
+		handler:
+			async (chat_id, data)=>{
 			sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава", "reply_markup":{"keyboard":
 																											[[{"text":"Отправить локейшн",
 																											"request_location":true}]],
@@ -119,7 +101,7 @@ var bot_commands={
 	}
 };
 
-function sendHttpRequest(url, headers, data, method){
+async function sendHttpRequest(url, headers, data, method){
 	return new Promise((resolve,reject)=>{
 		var options = {
 			hostname: url.hostname,
@@ -128,7 +110,6 @@ function sendHttpRequest(url, headers, data, method){
 		};
 		options.method=method
 		options.headers=headers;
-		console.log(options);
 
 		const req = https.request(options, (res) => {
 			var answer='';
@@ -145,7 +126,6 @@ function sendHttpRequest(url, headers, data, method){
 		if(options.headers!=undefined){
 			if('Content-Type' in  options.headers){
 				if(options.headers['Content-Type']=='application/json'){
-					console.log("щас будет врайт!",data);
 					req.write(JSON.stringify(data));
 				}
 			}
@@ -175,7 +155,7 @@ function reqParse(data){
 	return 0;
 }
 
-function Server(){
+async function Server(){
 	console.log("OK, starting server....")
 	var server = http.createServer();
 	server.listen(process.env.PORT);
@@ -200,6 +180,17 @@ eventer.on('undefined',bot_commands['undefined'].handler);
 const setWebHookUrl = new url.URL("https://api.telegram.org");
 setWebHookUrl.pathname = 'bot'+token + CMD.setWebHook;
 setWebHookUrl.searchParams.append('url',"https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc");
+
+/*(async function test(){
+	weatherUrl.searchParams.delete('lat');
+	weatherUrl.searchParams.delete('lon');
+	weatherUrl.searchParams.append('lat', 57);
+	weatherUrl.searchParams.append('lon', 65);
+	
+	console.log(res);
+})()*/
+
+
 
 sendHttpRequest(setWebHookUrl,{},null,'GET')
 .then(Server,(error)=>{
