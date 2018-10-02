@@ -59,10 +59,10 @@ var bot_commands={
 					geoUrl.searchParams.append('geocode',data.message.text.split(' ')[1].toLowerCase());
 					let location = await sendHttpRequest(geoUrl,{},null,'GET');
 					location = JSON.parse(location);
+					city = location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
 					location = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
 					weatherUrl.searchParams.append('lat', location[1]);
-					weatherUrl.searchParams.append('lon', location[0]);
-					console.log(location);
+					weatherUrl.searchParams.append('lon', location[0]);					
 				}					
 				let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, 'GET');
 				weather=JSON.parse(weather);
