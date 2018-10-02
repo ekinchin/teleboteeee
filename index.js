@@ -66,7 +66,7 @@ var bot_commands={
 				}					
 				let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, 'GET');
 				weather=JSON.parse(weather);
-				let answer = "Погода в: " + city
+				let answer = "Погода в: " + city +'\n'
 							+"Текущая температура: " + weather.fact.temp+'\n'
 							+"Ощущается как: " + weather.fact.feels_like+'\n'
 							+"Ветер: " + weather.fact.wind_speed;
