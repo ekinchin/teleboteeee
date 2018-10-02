@@ -62,7 +62,7 @@ var bot_commands={
 					location = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
 					weatherUrl.searchParams.append('lat', location[1]);
 					weatherUrl.searchParams.append('lon', location[0]);
-					console.log(location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text);
+					console.log(location);
 				}					
 				let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, 'GET');
 				weather=JSON.parse(weather);
