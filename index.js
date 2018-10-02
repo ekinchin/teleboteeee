@@ -26,10 +26,6 @@ const geoUrl = new url.URL("https://geocode-maps.yandex.ru");
 geoUrl.pathname="/1.x/";
 geoUrl.searchParams.append('format','json');
 geoUrl.searchParams.append('results','1');
-//https://geocode-maps.yandex.ru/1.x/?format=json&results=1&geocode=%D1%82%D1%8E%D0%BC%D0%B5%D0%BD%D1%8C
-
-
-
 
 var bot_commands={
 	'/start':{
@@ -52,7 +48,7 @@ var bot_commands={
 		descripion:'Погода',
 		handler:
 			async (chat_id, data)=>{
-				let answer;
+				let city = "Tyumen";
 				weatherUrl.searchParams.delete('lat');
 				weatherUrl.searchParams.delete('lon');
 				if(data.message.text.split(' ')[1]==undefined){
@@ -61,20 +57,19 @@ var bot_commands={
 				}else{
 					geoUrl.searchParams.delete('geocode');
 					geoUrl.searchParams.append('geocode',data.message.text.split(' ')[1].toLowerCase());
-					console.log(geoUrl);
 					let location = await sendHttpRequest(geoUrl,{},null,'GET');
-					console.log(location);
 					location = JSON.parse(location);
 					location = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
 					weatherUrl.searchParams.append('lat', location[1]);
 					weatherUrl.searchParams.append('lon', location[0]);
-
+					city = location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
 				}					
 				let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, 'GET');
 				weather=JSON.parse(weather);
-				answer = "Текущая температура: " + weather.fact.temp+'\n'
-							+"Ощущается как: " + weather.fact.feels_like+'\n'
-							+"Ветер: " + weather.fact.wind_speed;
+				let answer = "Погода в: " + city
+							+ "\nТекущая температура: " + weather.fact.temp+'\n'
+							+"\nОщущается как: " + weather.fact.feels_like+'\n'
+							+"\nВетер: " + weather.fact.wind_speed;
 				await sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 		}
 	},
