@@ -62,6 +62,7 @@ var bot_commands={
 					geoUrl.searchParams.delete('geocode');
 					geoUrl.searchParams.append('geocode',data.message.text.split(' ')[1].toLowerCase());
 					let location = await sendHttpRequest(geoUrl,{},null,'GET');
+					console.log(location);
 					location = JSON.parse(location);
 					location = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
 					weatherUrl.searchParams.append('lat', location[1]);
