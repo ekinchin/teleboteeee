@@ -23,7 +23,7 @@ weatherUrl.searchParams.append('lang','ru_RU');
 var weatherHeader = {'X-Yandex-API-Key': "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
 const geoUrl = new url.URL("https://geocode-maps.yandex.ru");
-geoUrl.pathname="/1.x";
+geoUrl.pathname="/1.x/";
 geoUrl.searchParams.append('format','json');
 geoUrl.searchParams.append('results','1');
 //https://geocode-maps.yandex.ru/1.x/?format=json&results=1&geocode=%D1%82%D1%8E%D0%BC%D0%B5%D0%BD%D1%8C
