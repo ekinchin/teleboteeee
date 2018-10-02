@@ -62,14 +62,14 @@ var bot_commands={
 					location = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
 					weatherUrl.searchParams.append('lat', location[1]);
 					weatherUrl.searchParams.append('lon', location[0]);
-					city = location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
+					console.log(location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text);
 				}					
 				let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, 'GET');
 				weather=JSON.parse(weather);
 				let answer = "Погода в: " + city
-							+ "\nТекущая температура: " + weather.fact.temp+'\n'
-							+"\nОщущается как: " + weather.fact.feels_like+'\n'
-							+"\nВетер: " + weather.fact.wind_speed;
+							+"Текущая температура: " + weather.fact.temp+'\n'
+							+"Ощущается как: " + weather.fact.feels_like+'\n'
+							+"Ветер: " + weather.fact.wind_speed;
 				await sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 		}
 	},
@@ -78,24 +78,9 @@ var bot_commands={
 		handler:
 			async (chat_id, data)=>{
 				var answer="Неизвестная команда, воспользуйтесь справкой /help";
-				sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
+				await sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, 'POST');
 			}
 	},
-	'/location':{
-		descripion:'отработка получения локации',
-		handler:
-			async (chat_id, data)=>{
-			sendHttpRequest(telegramUrl, {'Content-Type':'application/json'}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":"клава", "reply_markup":{"keyboard":
-																											[[{"text":"Отправить локейшн",
-																											"request_location":true}]],
-																											"resize_keyboard":true,
-																											"selective":true
-																										}}, 'POST')
-			.then((data)=>{
-				console.log(data);
-			})
-		}
-	}
 };
 
 async function sendHttpRequest(url, headers, data, method){
@@ -171,23 +156,11 @@ async function Server(){
 eventer.on('/weather',bot_commands['/weather'].handler);
 eventer.on('/start',bot_commands['/start'].handler);
 eventer.on('/help',bot_commands['/help'].handler);
-eventer.on('/location',bot_commands['/location'].handler);
 eventer.on('undefined',bot_commands['undefined'].handler);
 
 const setWebHookUrl = new url.URL("https://api.telegram.org");
 setWebHookUrl.pathname = 'bot'+token + CMD.setWebHook;
 setWebHookUrl.searchParams.append('url',"https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc");
-
-/*(async function test(){
-	weatherUrl.searchParams.delete('lat');
-	weatherUrl.searchParams.delete('lon');
-	weatherUrl.searchParams.append('lat', 57);
-	weatherUrl.searchParams.append('lon', 65);
-	
-	console.log(res);
-})()*/
-
-
 
 sendHttpRequest(setWebHookUrl,{},null,'GET')
 .then(Server,(error)=>{
