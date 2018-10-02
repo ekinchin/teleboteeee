@@ -61,6 +61,7 @@ var bot_commands={
 				}else{
 					geoUrl.searchParams.delete('geocode');
 					geoUrl.searchParams.append('geocode',data.message.text.split(' ')[1].toLowerCase());
+					console.log(geoUrl);
 					let location = await sendHttpRequest(geoUrl,{},null,'GET');
 					console.log(location);
 					location = JSON.parse(location);
