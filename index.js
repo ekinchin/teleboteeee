@@ -49,6 +49,7 @@ var bot_commands={
 		handler:
 			async (chat_id, data)=>{
 				let city = "Tyumen";
+				let lat, lon;
 				weatherUrl.searchParams.delete("lat");
 				weatherUrl.searchParams.delete("lon");
 				if(data.message.text.split(" ")[1]==undefined){
@@ -62,12 +63,11 @@ var bot_commands={
 					if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!==0){
 						const location = JSON.parse(geoLocation);
 						const city = location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
-						const [lon, lat] = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
+						[lon, lat] = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
 						weatherUrl.searchParams.append("lat", lat);
 						weatherUrl.searchParams.append("lon", lon);
 					}else{
-						lat=0;
-						lon=0;
+						lat=lon=0;
 					}
 				}
 				if(lat!==0 && lon!==0){
