@@ -33,6 +33,7 @@ const yaApi={
 		geoUrl.pathname="/1.x/";
 		geoUrl.searchParams.append("format","json");
 		geoUrl.searchParams.append("results","1");
+		geoUrl.searchParams.append("geocode",city);
 
 		const geoLocation = await sendHttpRequest(geoUrl,{},null,"GET");
 		console.log(geoLocation);
