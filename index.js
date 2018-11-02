@@ -44,17 +44,9 @@ const yaApi={
 		weatherUrl.searchParams.append("lon", lon);
 		const weatherHeader = {"X-Yandex-API-Key": "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
 
-		if(lat!==0 && lon!==0){
-			let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
-			weather=JSON.parse(weather);
-			answer = "Погода в: " + city +"\n"
-						+"Текущая температура: " + weather.fact.temp+"\n"
-						+"Ощущается как: " + weather.fact.feels_like+"\n"
-						+"Ветер: " + weather.fact.wind_speed;
-		}else{
-			answer = "Не удалось найти город";
-		}
-		return answer;
+		let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
+		weather=JSON.parse(weather);
+		return [weather.fact.temp, weather.fact.feels_like, weather.fact.wind_speed];
 	}
 };
 
@@ -82,10 +74,19 @@ const bot_commands={
 				let city = "Tyumen";
 				let lat = 57;
 				let lon = 65;
+				let answer = "";
 				if(data.message.text.split(" ")[1]!=undefined){
 					[city, lon, lat] = await yaApi.getLocation(data.message.text.split(" ")[1]);
 				}
-				const answer = yaApi.getWeather(lon, lat);
+				if(lon!=0 || lat!=0){
+					const [temp, tempFeel, wind] = yaApi.getWeather(city, lon, lat);
+					answer = "Погода в: " + city +"\n"
+						+"Текущая температура: " + temp+"\n"
+						+"Ощущается как: " + tempFeel+"\n"
+						+"Ветер: " + wind;
+				}else{
+					answer = "Не удалось найти город";
+				}
 				await sendHttpRequest(telegramUrl, {"Content-Type":"application/json"}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, "POST");
 			}
 	},
