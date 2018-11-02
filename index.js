@@ -71,17 +71,21 @@ const bot_commands={
 				let city = "Tyumen";
 				let lat = 57;
 				let lon = 65;
+				let answer = "";
+
 				weatherUrl.searchParams.delete("lat");
 				weatherUrl.searchParams.delete("lon");
+
 				if(data.message.text.split(" ")[1]==undefined){
 					weatherUrl.searchParams.append("lat", 57);
 					weatherUrl.searchParams.append("lon", 65);
 				}else{
 					[city, lon, lat] = await yaApi.getLocation(data.message.text.split(" ")[1]);
+					console.log(city, lon, lat);
 					weatherUrl.searchParams.append("lat", lat);
 					weatherUrl.searchParams.append("lon", lon);
 				}
-				let answer = "";
+
 				if(lat!==0 && lon!==0){
 					let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
 					weather=JSON.parse(weather);
