@@ -81,6 +81,7 @@ const bot_commands={
 					let [city, lon, lat] = await yaApi.getLocation(data.message.text.split(" ")[1]);
 					weatherUrl.searchParams.append("lat", lat);
 					weatherUrl.searchParams.append("lon", lon);
+					console.log(city, lon, lat);
 /*					geoUrl.searchParams.delete("geocode");
 					geoUrl.searchParams.append("geocode",data.message.text.split(" ")[1].toLowerCase());
 					const geoLocation = await sendHttpRequest(geoUrl,{},null,"GET");
