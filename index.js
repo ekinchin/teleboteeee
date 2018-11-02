@@ -35,6 +35,7 @@ const yaApi={
 		geoUrl.searchParams.append("results","1");
 
 		const geoLocation = await sendHttpRequest(geoUrl,{},null,"GET");
+		console.log(geoLocation);
 		const geoLocationParse = JSON.parse(geoLocation);
 		let cityParse = undefined;
 		let lon = undefined;
