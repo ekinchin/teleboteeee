@@ -70,10 +70,11 @@ var bot_commands={
 						lat=lon=0;
 					}
 				}
+				let answer = "";
 				if(lat!==0 && lon!==0){
 					let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
 					weather=JSON.parse(weather);
-					let answer = "Погода в: " + city +"\n"
+					answer = "Погода в: " + city +"\n"
 								+"Текущая температура: " + weather.fact.temp+"\n"
 								+"Ощущается как: " + weather.fact.feels_like+"\n"
 								+"Ветер: " + weather.fact.wind_speed;
