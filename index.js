@@ -57,21 +57,29 @@ var bot_commands={
 				}else{
 					geoUrl.searchParams.delete("geocode");
 					geoUrl.searchParams.append("geocode",data.message.text.split(" ")[1].toLowerCase());
-					let location = await sendHttpRequest(geoUrl,{},null,"GET");
-					console.log(geoUrl);
-					console.log(location);
-					location = JSON.parse(location);
-					city = location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
-					location = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
-					weatherUrl.searchParams.append("lat", location[1]);
-					weatherUrl.searchParams.append("lon", location[0]);				
+					const geoLocation = await sendHttpRequest(geoUrl,{},null,"GET");
+					const geoLocationParse = JSON.parse(geoLocation);
+					if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!==0){
+						const location = JSON.parse(geoLocation);
+						const city = location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
+						const lon, lat = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
+						weatherUrl.searchParams.append("lat", lat);
+						weatherUrl.searchParams.append("lon", lon);
+					}else{
+						lat=0;
+						lon=0;
+					}
 				}
-				let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
-				weather=JSON.parse(weather);
-				let answer = "Погода в: " + city +"\n"
-							+"Текущая температура: " + weather.fact.temp+"\n"
-							+"Ощущается как: " + weather.fact.feels_like+"\n"
-							+"Ветер: " + weather.fact.wind_speed;
+				if(lat!==0 && lon!==0){
+					let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
+					weather=JSON.parse(weather);
+					let answer = "Погода в: " + city +"\n"
+								+"Текущая температура: " + weather.fact.temp+"\n"
+								+"Ощущается как: " + weather.fact.feels_like+"\n"
+								+"Ветер: " + weather.fact.wind_speed;
+				}else{
+					answer = "Не удалось найти город";
+				}
 				await sendHttpRequest(telegramUrl, {"Content-Type":"application/json"}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, "POST");
 			}
 	},
