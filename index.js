@@ -17,16 +17,6 @@ var token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
 const telegramUrl = new url.URL("https://api.telegram.org");
 telegramUrl.pathname = "bot"+token +"/"+CMD.sendMessage;
 
-const weatherUrl = new url.URL("https://api.weather.yandex.ru");
-weatherUrl.pathname="/v1/informers";
-weatherUrl.searchParams.append("lang","ru_RU");
-var weatherHeader = {"X-Yandex-API-Key": "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
-
-const geoUrl = new url.URL("https://geocode-maps.yandex.ru");
-geoUrl.pathname="/1.x/";
-geoUrl.searchParams.append("format","json");
-geoUrl.searchParams.append("results","1");
-
 const yaApi={
 	getLocation:async (city)=>{
 		const geoUrl = new url.URL("https://geocode-maps.yandex.ru");
@@ -36,20 +26,37 @@ const yaApi={
 		geoUrl.searchParams.append("geocode",city);
 
 		const geoLocation = await sendHttpRequest(geoUrl,{},null,"GET");
-		console.log(geoLocation);
 		const geoLocationParse = JSON.parse(geoLocation);
 		let cityParse = undefined;
 		let lon = undefined;
 		let lat = undefined;
 		if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!=0){
 			cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
-			console.log(cityParse);
 			[lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
 		}
-		console.log(lon, lat);
 		return [cityParse||city, lon||0, lat||0];
+	},
+	getWeather:async (lon, lat)=>{
+		const weatherUrl = new url.URL("https://api.weather.yandex.ru");
+		weatherUrl.pathname="/v1/informers";
+		weatherUrl.searchParams.append("lang","ru_RU");
+		weatherUrl.searchParams.append("lat", lat);
+		weatherUrl.searchParams.append("lon", lon);
+		const weatherHeader = {"X-Yandex-API-Key": "40f0e52b-168d-40a4-ba38-0c2bf4d98726"};
+
+		if(lat!==0 && lon!==0){
+			let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
+			weather=JSON.parse(weather);
+			answer = "Погода в: " + city +"\n"
+						+"Текущая температура: " + weather.fact.temp+"\n"
+						+"Ощущается как: " + weather.fact.feels_like+"\n"
+						+"Ветер: " + weather.fact.wind_speed;
+		}else{
+			answer = "Не удалось найти город";
+		}
+		return answer;
 	}
-}
+};
 
 const bot_commands={
 	"/start":{
@@ -75,31 +82,10 @@ const bot_commands={
 				let city = "Tyumen";
 				let lat = 57;
 				let lon = 65;
-				let answer = "";
-
-				weatherUrl.searchParams.delete("lat");
-				weatherUrl.searchParams.delete("lon");
-
-				if(data.message.text.split(" ")[1]==undefined){
-					weatherUrl.searchParams.append("lat", 57);
-					weatherUrl.searchParams.append("lon", 65);
-				}else{
+				if(data.message.text.split(" ")[1]!=undefined){
 					[city, lon, lat] = await yaApi.getLocation(data.message.text.split(" ")[1]);
-					console.log(city, lon, lat);
-					weatherUrl.searchParams.append("lat", lat);
-					weatherUrl.searchParams.append("lon", lon);
 				}
-
-				if(lat!==0 && lon!==0){
-					let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
-					weather=JSON.parse(weather);
-					answer = "Погода в: " + city +"\n"
-								+"Текущая температура: " + weather.fact.temp+"\n"
-								+"Ощущается как: " + weather.fact.feels_like+"\n"
-								+"Ветер: " + weather.fact.wind_speed;
-				}else{
-					answer = "Не удалось найти город";
-				}
+				const answer = yaApi.getWeather(lon, lat);
 				await sendHttpRequest(telegramUrl, {"Content-Type":"application/json"}, {"method": CMD.sendMessage, "chat_id":chat_id, "text":answer}, "POST");
 			}
 	},
