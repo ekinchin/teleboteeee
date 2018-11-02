@@ -62,7 +62,7 @@ var bot_commands={
 					if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!==0){
 						const location = JSON.parse(geoLocation);
 						const city = location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
-						const lon, lat = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
+						const [lon, lat] = location.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
 						weatherUrl.searchParams.append("lat", lat);
 						weatherUrl.searchParams.append("lon", lon);
 					}else{
