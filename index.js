@@ -27,7 +27,27 @@ geoUrl.pathname="/1.x/";
 geoUrl.searchParams.append("format","json");
 geoUrl.searchParams.append("results","1");
 
-var bot_commands={
+const yaApi={
+	getLocation:async (city)=>{
+		const geoUrl = new url.URL("https://geocode-maps.yandex.ru");
+		geoUrl.pathname="/1.x/";
+		geoUrl.searchParams.append("format","json");
+		geoUrl.searchParams.append("results","1");
+
+		const geoLocation = await sendHttpRequest(geoUrl,{},null,"GET");
+		const geoLocationParse = JSON.parse(geoLocation);
+		let cityParse = undefined;
+		let lon = undefined;
+		let lat = undefined;
+		if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!=0){
+			cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
+			[lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
+		}
+		return [cityParse||city, lon||0, lat||0];
+	}
+}
+
+const bot_commands={
 	"/start":{
 		descripion:"Начать работу с ботом",
 		handler:
@@ -57,20 +77,23 @@ var bot_commands={
 					weatherUrl.searchParams.append("lat", 57);
 					weatherUrl.searchParams.append("lon", 65);
 				}else{
-					geoUrl.searchParams.delete("geocode");
+
+					let [city, lon, lat] = await yaApi.getLocation(data.message.text.split(" ")[1]);
+					weatherUrl.searchParams.append("lat", lat);
+					weatherUrl.searchParams.append("lon", lon);
+/*					geoUrl.searchParams.delete("geocode");
 					geoUrl.searchParams.append("geocode",data.message.text.split(" ")[1].toLowerCase());
 					const geoLocation = await sendHttpRequest(geoUrl,{},null,"GET");
 					const geoLocationParse = JSON.parse(geoLocation);
 					if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!=0){
-						console.log(geoLocationParse);
-						console.log(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found);
+						console.log(yaApi.getLocation(data.message.text.split(" ")[1].toLowerCase()));
 						city = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
 						[lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
 						weatherUrl.searchParams.append("lat", lat);
 						weatherUrl.searchParams.append("lon", lon);
 					}else{
 						lat=lon=0;
-					}
+					}*/
 				}
 				let answer = "";
 				if(lat!==0 && lon!==0){
