@@ -80,9 +80,9 @@ const bot_commands={
 					let [city, lon, lat] = await yaApi.getLocation(data.message.text.split(" ")[1]);
 					weatherUrl.searchParams.append("lat", lat);
 					weatherUrl.searchParams.append("lon", lon);
-					console.log(city, lon, lat);
-					console.log(typeof lon);
 				}
+				console.log(city, lon, lat);
+				console.log(typeof lon);
 				let answer = "";
 				if(lat!==0 && lon!==0){
 					let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
