@@ -63,6 +63,7 @@ var bot_commands={
 					const geoLocationParse = JSON.parse(geoLocation);
 					if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!==0){
 						console.log(geoLocationParse);
+						console.log(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found);
 						city = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
 						[lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
 						weatherUrl.searchParams.append("lat", lat);
