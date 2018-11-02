@@ -61,7 +61,7 @@ var bot_commands={
 					geoUrl.searchParams.append("geocode",data.message.text.split(" ")[1].toLowerCase());
 					const geoLocation = await sendHttpRequest(geoUrl,{},null,"GET");
 					const geoLocationParse = JSON.parse(geoLocation);
-					if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!==0){
+					if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!=0){
 						console.log(geoLocationParse);
 						console.log(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found);
 						city = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
