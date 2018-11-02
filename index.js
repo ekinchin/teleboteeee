@@ -41,8 +41,10 @@ const yaApi={
 		let lat = undefined;
 		if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!=0){
 			cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
+			console.log(cityParse);
 			[lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
 		}
+		console.log(lon, lat);
 		return [cityParse||city, lon||0, lat||0];
 	}
 }
