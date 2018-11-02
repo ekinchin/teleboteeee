@@ -81,7 +81,7 @@ const bot_commands={
 					weatherUrl.searchParams.append("lat", lat);
 					weatherUrl.searchParams.append("lon", lon);
 					console.log(city, lon, lat);
-					cosole.log(typeof lon);
+					console.log(typeof lon);
 				}
 				let answer = "";
 				if(lat!==0 && lon!==0){
