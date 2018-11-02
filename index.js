@@ -77,24 +77,11 @@ const bot_commands={
 					weatherUrl.searchParams.append("lat", 57);
 					weatherUrl.searchParams.append("lon", 65);
 				}else{
-
 					let [city, lon, lat] = await yaApi.getLocation(data.message.text.split(" ")[1]);
 					weatherUrl.searchParams.append("lat", lat);
 					weatherUrl.searchParams.append("lon", lon);
 					console.log(city, lon, lat);
-/*					geoUrl.searchParams.delete("geocode");
-					geoUrl.searchParams.append("geocode",data.message.text.split(" ")[1].toLowerCase());
-					const geoLocation = await sendHttpRequest(geoUrl,{},null,"GET");
-					const geoLocationParse = JSON.parse(geoLocation);
-					if(geoLocationParse.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found!=0){
-						console.log(yaApi.getLocation(data.message.text.split(" ")[1].toLowerCase()));
-						city = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.text;
-						[lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(" ");
-						weatherUrl.searchParams.append("lat", lat);
-						weatherUrl.searchParams.append("lon", lon);
-					}else{
-						lat=lon=0;
-					}*/
+					cosole.log(typeof lon);
 				}
 				let answer = "";
 				if(lat!==0 && lon!==0){
