@@ -79,7 +79,7 @@ const bot_commands={
 					[city, lon, lat] = await yaApi.getLocation(data.message.text.split(" ")[1]);
 				}
 				if(lon!=0 || lat!=0){
-					const [temp, tempFeel, wind] = yaApi.getWeather(city, lon, lat);
+					const [temp, tempFeel, wind] = yaApi.getWeather(lon, lat);
 					answer = "Погода в: " + city +"\n"
 						+"Текущая температура: " + temp+"\n"
 						+"Ощущается как: " + tempFeel+"\n"
