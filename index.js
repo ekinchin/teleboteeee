@@ -7,24 +7,24 @@ const EventEmitter = require('events').EventEmitter;
 const eventer = new EventEmitter();
 
 const CMD = {
-  setWebHook: "setWebhook",
-  getUpdates: "getUpdates",
-  sendMessage: "sendMessage"
+  setWebHook: 'setWebhook',
+  getUpdates: 'getUpdates',
+  sendMessage: 'sendMessage',
 };
 
-const token = "674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc";
-const telegramUrl = new url.URL("https://api.telegram.org");
+const token = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
+const telegramUrl = new url.URL('https://api.telegram.org');
 telegramUrl.pathname = `bot${token}/${CMD.sendMessage}`;
 
 const yaApi = {
-  getLocation: async city => {
-    const geoUrl = new url.URL("https://geocode-maps.yandex.ru");
-    geoUrl.pathname = "/1.x/";
-    geoUrl.searchParams.append("format", "json");
-    geoUrl.searchParams.append("results", "1");
-    geoUrl.searchParams.append("geocode", city);
+  getLocation: async (city) => {
+    const geoUrl = new url.URL('https://geocode-maps.yandex.ru');
+    geoUrl.pathname = '/1.x/';
+    geoUrl.searchParams.append('format', 'json');
+    geoUrl.searchParams.append('results', '1');
+    geoUrl.searchParams.append('geocode', city);
 
-    const geoLocation = await sendHttpRequest(geoUrl, {}, null, "GET");
+    const geoLocation = await sendHttpRequest(geoUrl, {}, null, 'GET');
     const geoLocationParse = JSON.parse(geoLocation);
     let cityParse;
     let lon;
@@ -33,102 +33,101 @@ const yaApi = {
       geoLocationParse.response.GeoObjectCollection.metaDataProperty
         .GeocoderResponseMetaData.found != 0
     ) {
-      cityParse =
-        geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject
+      cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject
         .metaDataProperty.GeocoderMetaData.text;
       [
         lon,
-        lat
+        lat,
       ] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(
-        " "
+        ' ',
       );
     }
     return [cityParse || city, lon || 0, lat || 0];
   },
   getWeather: async (lon, lat) => {
-    const weatherUrl = new url.URL("https://api.weather.yandex.ru");
-    weatherUrl.pathname = "/v1/informers";
-    weatherUrl.searchParams.append("lang", "ru_RU");
-    weatherUrl.searchParams.append("lat", lat);
-    weatherUrl.searchParams.append("lon", lon);
+    const weatherUrl = new url.URL('https://api.weather.yandex.ru');
+    weatherUrl.pathname = '/v1/informers';
+    weatherUrl.searchParams.append('lang', 'ru_RU');
+    weatherUrl.searchParams.append('lat', lat);
+    weatherUrl.searchParams.append('lon', lon);
     const weatherHeader = {
-      "X-Yandex-API-Key": "40f0e52b-168d-40a4-ba38-0c2bf4d98726"
+      'X-Yandex-API-Key': '40f0e52b-168d-40a4-ba38-0c2bf4d98726',
     };
 
-    let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, "GET");
+    let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, 'GET');
     weather = JSON.parse(weather);
     return [
       weather.fact.temp,
       weather.fact.feels_like,
-      weather.fact.wind_speed
+      weather.fact.wind_speed,
     ];
-  }
+  },
 };
 
 const bot_commands = {
   '/start': {
-    descripion: "Начать работу с ботом",
+    descripion: 'Начать работу с ботом',
     handler: async (chat_id, data) => {
       const answer = `Hello, ${data.message.from.first_name}`;
       sendHttpRequest(
         telegramUrl,
-        { "Content-Type": "application/json" },
+        { 'Content-Type': 'application/json' },
         { method: CMD.sendMessage, chat_id, text: answer },
-        "POST"
+        'POST',
       );
-    }
+    },
   },
   '/help': {
-    descripion: "Помощь",
-    handler: async chat_id => {
-      const answer =        '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
+    descripion: 'Помощь',
+    handler: async (chat_id) => {
+      const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
       sendHttpRequest(
         telegramUrl,
-        { "Content-Type": "application/json" },
+        { 'Content-Type': 'application/json' },
         { method: CMD.sendMessage, chat_id, text: answer },
-        "POST"
+        'POST',
       );
-    }
+    },
   },
   '/weather': {
-    descripion: "Погода",
+    descripion: 'Погода',
     handler: async (chat_id, data) => {
-      let city = "Tyumen";
+      let city = 'Tyumen';
       let lat = 57;
       let lon = 65;
-      let answer = "";
+      let answer = '';
 
-      if (data.message.text.split(" ")[1] != undefined) {
+      if (data.message.text.split(' ')[1] != undefined) {
         [city, lon, lat] = await yaApi.getLocation(
-          data.message.text.split(" ")[1]
+          data.message.text.split(' ')[1],
         );
       }
       if (lon != 0 || lat != 0) {
         const [temp, tempFeel, wind] = await yaApi.getWeather(lon, lat);
         answer = `${`Погода в: ${city}\n``Текущая температура: ${temp}\n`}Ощущается как: ${tempFeel}\n``Ветер: ${wind}`;
       } else {
-        answer = "Не удалось найти город";
+        answer = 'Не удалось найти город';
       }
       await sendHttpRequest(
         telegramUrl,
-        { "Content-Type": "application/json" },
+        { 'Content-Type': 'application/json' },
         { method: CMD.sendMessage, chat_id, text: answer },
-        "POST"
+        'POST',
       );
-    }
+    },
   },
   undefined: {
-    descripion: "Неизвестная команда",
-    handler: async chat_id => {
-      const answer = "Неизвестная команда, воспользуйтесь справкой /help";
+    descripion: 'Неизвестная команда',
+    handler: async (chat_id) => {
+      const answer = 'Неизвестная команда, воспользуйтесь справкой /help';
       await sendHttpRequest(
         telegramUrl,
-        { "Content-Type": "application/json" },
+        { 'Content-Type': 'application/json' },
         { method: CMD.sendMessage, chat_id, text: answer },
-        "POST"
+        'POST',
       );
-    }
-  }
+    },
+  },
 };
 
 async function sendHttpRequest(url, headers, data, method) {
@@ -136,26 +135,26 @@ async function sendHttpRequest(url, headers, data, method) {
     const options = {
       hostname: url.hostname,
       port: 443,
-      path: url.pathname + url.search
+      path: url.pathname + url.search,
     };
     options.method = method;
     options.headers = headers;
 
-    const req = https.request(options, res => {
-      let answer = "";
-      res.on("data", data => {
+    const req = https.request(options, (res) => {
+      let answer = '';
+      res.on('data', (data) => {
         answer += data;
       });
-      res.on("end", () => {
+      res.on('end', () => {
         resolve(answer);
       });
-      res.on("error", () => {
+      res.on('error', () => {
         reject(answer);
       });
     });
     if (options.headers != undefined) {
-      if ("Content-Type" in options.headers) {
-        if (options.headers["Content-Type"] == "application/json") {
+      if ('Content-Type' in options.headers) {
+        if (options.headers['Content-Type'] == 'application/json') {
           req.write(JSON.stringify(data));
         }
       }
@@ -171,19 +170,19 @@ function reqParse(data) {
   data.message.entities == undefined
     ? null
     : (entities = data.message.entities[0]);
-  if (entities.type == "bot_command") {
-    switch (text.split(" ")[0].toLowerCase()) {
-      case "/start":
-      case "/help":
-      case "/weather":
+  if (entities.type == 'bot_command') {
+    switch (text.split(' ')[0].toLowerCase()) {
+      case '/start':
+      case '/help':
+      case '/weather':
         eventer.emit(
-          text.split(" ")[0].toLowerCase(),
+          text.split(' ')[0].toLowerCase(),
           data.message.chat.id,
-          data
+          data,
         );
         break;
       default:
-        eventer.emit("undefined", data.message.chat.id);
+        eventer.emit('undefined', data.message.chat.id);
         break;
     }
   }
@@ -193,28 +192,28 @@ function reqParse(data) {
 async function Server() {
   const server = http.createServer();
   server.listen(process.env.PORT);
-  server.on("request", (request, response) => {
-    let requestData = "";
-    request.on("data", data => {
+  server.on('request', (request, response) => {
+    let requestData = '';
+    request.on('data', (data) => {
       requestData += data;
     });
-    request.on("end", () => {
+    request.on('end', () => {
       reqParse(requestData);
       response.end();
     });
   });
 }
 
-eventer.on("/weather", bot_commands["/weather"].handler);
-eventer.on("/start", bot_commands["/start"].handler);
-eventer.on("/help", bot_commands["/help"].handler);
-eventer.on("undefined", bot_commands.undefined.handler);
+eventer.on('/weather', bot_commands['/weather'].handler);
+eventer.on('/start', bot_commands['/start'].handler);
+eventer.on('/help', bot_commands['/help'].handler);
+eventer.on('undefined', bot_commands.undefined.handler);
 
-const setWebHookUrl = new url.URL("https://api.telegram.org");
+const setWebHookUrl = new url.URL('https://api.telegram.org');
 setWebHookUrl.pathname = `bot${token}${CMD.setWebHook}`;
 setWebHookUrl.searchParams.append(
-  "url",
-  "https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc"
+  'url',
+  'https://salty-reaches-74004.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc',
 );
 
-sendHttpRequest(setWebHookUrl, {}, null, "GET").then(Server);
+sendHttpRequest(setWebHookUrl, {}, null, 'GET').then(Server);
