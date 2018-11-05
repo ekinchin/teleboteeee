@@ -68,6 +68,7 @@ const botCommands = {
   '/start': {
     descripion: 'Начать работу с ботом',
     handler: async (chatId, data) => {
+      console.log('/start');
       const answer = `Hello, ${data.message.from.first_name}`;
       sendHttpRequest(
         telegramUrl,
@@ -80,6 +81,7 @@ const botCommands = {
   '/help': {
     descripion: 'Помощь',
     handler: async (chatId) => {
+      console.log('/help');
       const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
       sendHttpRequest(
         telegramUrl,
