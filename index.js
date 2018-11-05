@@ -171,6 +171,7 @@ function reqParse(data) {
     ? null
     : (entities = data.message.entities[0]);
   if (entities.type === 'bot_command') {
+    console.log('command received!');
     switch (text.split(' ')[0].toLowerCase()) {
       case '/start':
       case '/help':
