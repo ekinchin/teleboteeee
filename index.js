@@ -31,7 +31,7 @@ const yaApi = {
     let lat;
     if (
       geoLocationParse.response.GeoObjectCollection.metaDataProperty
-        .GeocoderResponseMetaData.found != 0
+        .GeocoderResponseMetaData.found !== 0
     ) {
       cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject
         .metaDataProperty.GeocoderMetaData.text;
@@ -64,45 +64,45 @@ const yaApi = {
   },
 };
 
-const bot_commands = {
+const botCommands = {
   '/start': {
     descripion: 'Начать работу с ботом',
-    handler: async (chat_id, data) => {
+    handler: async (chatId, data) => {
       const answer = `Hello, ${data.message.from.first_name}`;
       sendHttpRequest(
         telegramUrl,
         { 'Content-Type': 'application/json' },
-        { method: CMD.sendMessage, chat_id, text: answer },
+        { method: CMD.sendMessage, chatId, text: answer },
         'POST',
       );
     },
   },
   '/help': {
     descripion: 'Помощь',
-    handler: async (chat_id) => {
+    handler: async (chatId) => {
       const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
       sendHttpRequest(
         telegramUrl,
         { 'Content-Type': 'application/json' },
-        { method: CMD.sendMessage, chat_id, text: answer },
+        { method: CMD.sendMessage, chatId, text: answer },
         'POST',
       );
     },
   },
   '/weather': {
     descripion: 'Погода',
-    handler: async (chat_id, data) => {
+    handler: async (chatId, data) => {
       let city = 'Tyumen';
       let lat = 57;
       let lon = 65;
       let answer = '';
 
-      if (data.message.text.split(' ')[1] != undefined) {
+      if (data.message.text.split(' ')[1] !== undefined) {
         [city, lon, lat] = await yaApi.getLocation(
           data.message.text.split(' ')[1],
         );
       }
-      if (lon != 0 || lat != 0) {
+      if (lon !== 0 || lat !== 0) {
         const [temp, tempFeel, wind] = await yaApi.getWeather(lon, lat);
         answer = `${`Погода в: ${city}\n``Текущая температура: ${temp}\n`}Ощущается как: ${tempFeel}\n``Ветер: ${wind}`;
       } else {
@@ -111,19 +111,19 @@ const bot_commands = {
       await sendHttpRequest(
         telegramUrl,
         { 'Content-Type': 'application/json' },
-        { method: CMD.sendMessage, chat_id, text: answer },
+        { method: CMD.sendMessage, chatId, text: answer },
         'POST',
       );
     },
   },
   undefined: {
     descripion: 'Неизвестная команда',
-    handler: async (chat_id) => {
+    handler: async (chatId) => {
       const answer = 'Неизвестная команда, воспользуйтесь справкой /help';
       await sendHttpRequest(
         telegramUrl,
         { 'Content-Type': 'application/json' },
-        { method: CMD.sendMessage, chat_id, text: answer },
+        { method: CMD.sendMessage, chatId, text: answer },
         'POST',
       );
     },
@@ -152,9 +152,9 @@ async function sendHttpRequest(url, headers, data, method) {
         reject(answer);
       });
     });
-    if (options.headers != undefined) {
+    if (options.headers !== undefined) {
       if ('Content-Type' in options.headers) {
-        if (options.headers['Content-Type'] == 'application/json') {
+        if (options.headers['Content-Type'] === 'application/json') {
           req.write(JSON.stringify(data));
         }
       }
@@ -167,10 +167,10 @@ function reqParse(data) {
   data = JSON.parse(data);
   const text = data.message.text;
   let entities = {};
-  data.message.entities == undefined
+  data.message.entities === undefined
     ? null
     : (entities = data.message.entities[0]);
-  if (entities.type == 'bot_command') {
+  if (entities.type === 'bot_command') {
     switch (text.split(' ')[0].toLowerCase()) {
       case '/start':
       case '/help':
@@ -204,10 +204,10 @@ async function Server() {
   });
 }
 
-eventer.on('/weather', bot_commands['/weather'].handler);
-eventer.on('/start', bot_commands['/start'].handler);
-eventer.on('/help', bot_commands['/help'].handler);
-eventer.on('undefined', bot_commands.undefined.handler);
+eventer.on('/weather', botCommands['/weather'].handler);
+eventer.on('/start', botCommands['/start'].handler);
+eventer.on('/help', botCommands['/help'].handler);
+eventer.on('undefined', botCommands.undefined.handler);
 
 const setWebHookUrl = new url.URL('https://api.telegram.org');
 setWebHookUrl.pathname = `bot${token}${CMD.setWebHook}`;
