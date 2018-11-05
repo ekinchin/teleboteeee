@@ -1,12 +1,7 @@
-import { EventEmitter } from 'events';
-import { http } from 'http';
-import { https } from 'https';
-import { url } from 'url';
-
-// const http = require('http');
-// const https = require('https');
-// const url = require('url');
-// const EventEmitter = require('events').EventEmitter;
+const http = require('http');
+const https = require('https');
+const url = require('url');
+const EventEmitter = require('events').EventEmitter;
 
 
 const eventer = new EventEmitter();
