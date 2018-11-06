@@ -92,20 +92,16 @@ const botCommands = {
     descripion: 'Начать работу с ботом',
     handler:
     async (chatId, data) => {
-      console.log('chat_id:', chatId);
       const answer = `Hello, ${data.message.from.first_name}`;
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage,  'chat_id': chatId, text: answer }, 'POST');
     },
   },
   '/help': {
     descripion: 'Помощь',
     handler:
     async (chatId, data) => {
-      console.log('chat_id:', chatId);
       const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
-      console.log(telegramUrl);
-      console.log({ method: CMD.sendMessage, chatId, text: answer });
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage,  'chat_id': chatId, text: answer }, 'POST');
     },
   },
   '/weather': {
@@ -129,7 +125,7 @@ const botCommands = {
       } else {
         answer = 'Не удалось найти город';
       }
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage,  'chat_id': chatId, text: answer }, 'POST');
     },
   },
   undefined: {
@@ -137,7 +133,7 @@ const botCommands = {
     handler:
     async (chatId) => {
       const answer = 'Неизвестная команда, воспользуйтесь справкой /help';
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage,  'chat_id': chatId, text: answer }, 'POST');
     },
   },
 };
@@ -152,7 +148,6 @@ function reqParse(data) {
       case '/start':
       case '/help':
       case '/weather':
-        console.log(text.split(' ')[0].toLowerCase());
         eventer.emit(text.split(' ')[0].toLowerCase(), data.message.chat.id, data);
         break;
       default:
