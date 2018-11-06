@@ -93,7 +93,7 @@ const botCommands = {
     handler:
     async (chatId, data) => {
       const answer = `Hello, ${data.message.from.first_name}`;
-      sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
     },
   },
   '/help': {
@@ -101,7 +101,7 @@ const botCommands = {
     handler:
     async (chatId) => {
       const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
-      sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
     },
   },
   '/weather': {
