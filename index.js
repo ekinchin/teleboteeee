@@ -108,6 +108,7 @@ const botCommands = {
     descripion: 'Погода',
     handler:
     async (chatId, data) => {
+      console.log('chat_id:', chatId);
       let city = 'Tyumen';
       let lat = 57;
       let lon = 65;
