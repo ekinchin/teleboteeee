@@ -1,7 +1,6 @@
 const http = require('http');
 const https = require('https');
 const url = require('url');
-
 const EventEmitter = require('events').EventEmitter;
 
 const eventer = new EventEmitter();
@@ -38,9 +37,9 @@ async function sendHttpRequest(url, headers, data, method) {
         reject(answer);
       });
     });
-    if (options.headers != undefined) {
+    if (options.headers !== undefined) {
       if ('Content-Type' in options.headers) {
-        if (options.headers['Content-Type'] == 'application/json') {
+        if (options.headers['Content-Type'] === 'application/json') {
           req.write(JSON.stringify(data));
         }
       }
@@ -64,9 +63,9 @@ const yaApi = {
     let lat;
     if (
       geoLocationParse.response.GeoObjectCollection
-      .metaDataProperty.GeocoderResponseMetaData
-      .found != 0
-      ) {
+        .metaDataProperty.GeocoderResponseMetaData
+        .found !== 0
+    ) {
       cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0]
         .GeoObject.metaDataProperty.GeocoderMetaData.text;
       [lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
@@ -93,30 +92,29 @@ const botCommands = {
     handler:
     async (chatId, data) => {
       const answer = `Hello, ${data.message.from.first_name}`;
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage,  'chat_id': chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
     },
   },
   '/help': {
     descripion: 'Помощь',
     handler:
-    async (chatId, data) => {
+    async (chatId) => {
       const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage,  'chat_id': chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
     },
   },
   '/weather': {
     descripion: 'Погода',
     handler:
     async (chatId, data) => {
-      console.log('chat_id:', chatId);
       let city = 'Tyumen';
       let lat = 57;
       let lon = 65;
       let answer = '';
-      if (data.message.text.split(' ')[1] != undefined) {
+      if (data.message.text.split(' ')[1] !== undefined) {
         [city, lon, lat] = await yaApi.getLocation(data.message.text.split(' ')[1]);
       }
-      if (lon != 0 || lat != 0) {
+      if (lon !== 0 || lat !== 0) {
         const [temp, tempFeel, wind] = await yaApi.getWeather(lon, lat);
         answer = `Погода в: ${city}\n`
         + `Текущая температура: ${temp}\n`
@@ -125,7 +123,7 @@ const botCommands = {
       } else {
         answer = 'Не удалось найти город';
       }
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage,  'chat_id': chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
     },
   },
   undefined: {
@@ -133,7 +131,7 @@ const botCommands = {
     handler:
     async (chatId) => {
       const answer = 'Неизвестная команда, воспользуйтесь справкой /help';
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage,  'chat_id': chatId, text: answer }, 'POST');
+      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
     },
   },
 };
@@ -142,8 +140,8 @@ function reqParse(data) {
   data = JSON.parse(data);
   const text = data.message.text;
   let entities = {};
-  (data.message.entities == undefined) ? null : entities = data.message.entities[0];
-  if (entities.type == 'bot_command') {
+  (data.message.entities === undefined) ? null : entities = data.message.entities[0];
+  if (entities.type === 'bot_command') {
     switch (text.split(' ')[0].toLowerCase()) {
       case '/start':
       case '/help':
