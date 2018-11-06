@@ -64,34 +64,34 @@ const yaApi = {
   },
 };
 
-const bot_commands = {
+const botCommands = {
   '/start': {
     descripion: 'Начать работу с ботом',
-    handler: async (chat_id, data) => {
+    handler: async (chatId, data) => {
       const answer = `Hello, ${data.message.from.first_name}`;
       sendHttpRequest(
         telegramUrl,
         { 'Content-Type': 'application/json' },
-        { method: CMD.sendMessage, chat_id, text: answer },
+        { method: CMD.sendMessage, chatId, text: answer },
         'POST',
       );
     },
   },
   '/help': {
     descripion: 'Помощь',
-    handler: async (chat_id) => {
+    handler: async (chatId) => {
       const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
       sendHttpRequest(
         telegramUrl,
         { 'Content-Type': 'application/json' },
-        { method: CMD.sendMessage, chat_id, text: answer },
+        { method: CMD.sendMessage, chatId, text: answer },
         'POST',
       );
     },
   },
   '/weather': {
     descripion: 'Погода',
-    handler: async (chat_id, data) => {
+    handler: async (chatId, data) => {
       let city = 'Tyumen';
       let lat = 57;
       let lon = 65;
@@ -111,19 +111,19 @@ const bot_commands = {
       await sendHttpRequest(
         telegramUrl,
         { 'Content-Type': 'application/json' },
-        { method: CMD.sendMessage, chat_id, text: answer },
+        { method: CMD.sendMessage, chatId, text: answer },
         'POST',
       );
     },
   },
   undefined: {
     descripion: 'Неизвестная команда',
-    handler: async (chat_id) => {
+    handler: async (chatId) => {
       const answer = 'Неизвестная команда, воспользуйтесь справкой /help';
       await sendHttpRequest(
         telegramUrl,
         { 'Content-Type': 'application/json' },
-        { method: CMD.sendMessage, chat_id, text: answer },
+        { method: CMD.sendMessage, chatId, text: answer },
         'POST',
       );
     },
@@ -204,10 +204,10 @@ async function Server() {
   });
 }
 
-eventer.on('/weather', bot_commands['/weather'].handler);
-eventer.on('/start', bot_commands['/start'].handler);
-eventer.on('/help', bot_commands['/help'].handler);
-eventer.on('undefined', bot_commands.undefined.handler);
+eventer.on('/weather', botCommands['/weather'].handler);
+eventer.on('/start', botCommands['/start'].handler);
+eventer.on('/help', botCommands['/help'].handler);
+eventer.on('undefined', botCommands.undefined.handler);
 
 const setWebHookUrl = new url.URL('https://api.telegram.org');
 setWebHookUrl.pathname = `bot${token}${CMD.setWebHook}`;
