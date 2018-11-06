@@ -216,7 +216,7 @@ const setWebHookUrl = new url.URL('https://api.telegram.org');
 setWebHookUrl.pathname = `bot${token}${CMD.setWebHook}`;
 setWebHookUrl.searchParams.append(
   'url',
-  'https://teleboteeee.herokuapp.com/${token}',
+  `https://teleboteeee.herokuapp.com/${token}`,
 );
 
 sendHttpRequest(setWebHookUrl, {}, null, 'GET').then(Server);
