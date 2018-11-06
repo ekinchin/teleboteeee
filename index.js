@@ -61,13 +61,10 @@ const yaApi = {
     let cityParse;
     let lon;
     let lat;
-    console.log(typeof geoLocationParse.response.GeoObjectCollection
-      .metaDataProperty.GeocoderResponseMetaData
-      .found);
     if (
       geoLocationParse.response.GeoObjectCollection
         .metaDataProperty.GeocoderResponseMetaData
-        .found !== 0
+        .found !== '0'
     ) {
       cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0]
         .GeoObject.metaDataProperty.GeocoderMetaData.text;
