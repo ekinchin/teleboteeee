@@ -1,7 +1,7 @@
-const http = require('http');
-const https = require('https');
-const url = require('url');
-const events = require('events');
+import { http } from 'http';
+import { https } from 'https';
+import { url } from 'url';
+import { events } from 'events';
 
 const eventer = new events.EventEmitter();
 
