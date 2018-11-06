@@ -1,9 +1,10 @@
 const http = require('http');
 const https = require('https');
 const url = require('url');
-const EventEmitter = require('events').EventEmitter;
+const events = require('events');
+//const EventEmitter = require('events').EventEmitter;
 
-const eventer = new EventEmitter();
+const eventer = new events.EventEmitter();
 
 const CMD = {
   setWebHook: 'setWebhook',
