@@ -92,6 +92,7 @@ const botCommands = {
     descripion: 'Начать работу с ботом',
     handler:
     async (chatId, data) => {
+      console.log('chat_id:', chatId);
       const answer = `Hello, ${data.message.from.first_name}`;
       await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
     },
@@ -99,8 +100,11 @@ const botCommands = {
   '/help': {
     descripion: 'Помощь',
     handler:
-    async (chatId) => {
+    async (chatId, data) => {
+      console.log('chat_id:', chatId);
       const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
+      console.log(telegramUrl);
+      console.log({ method: CMD.sendMessage, chatId, text: answer });
       await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chatId, text: answer }, 'POST');
     },
   },
