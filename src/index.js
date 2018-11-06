@@ -1,10 +1,10 @@
 import { http } from 'http';
 import { https } from 'https';
 import { url } from 'url';
-import { events } from 'events';
+import { EventEmitter } from 'events';
 import { sendHttpRequest } from './httpRequest';
 
-const eventer = new events.EventEmitter();
+const eventer = new EventEmitter();
 
 const CMD = {
   setWebHook: 'setWebhook',
@@ -13,7 +13,7 @@ const CMD = {
 };
 
 const token = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
-const telegramUrl = new url.URL('https://api.telegram.org');
+const telegramUrl = new url('https://api.telegram.org');
 telegramUrl.pathname = `bot${token}/${CMD.sendMessage}`;
 
 async function sendHttpRequest_(urlReq, headers, dataReq, method) {
