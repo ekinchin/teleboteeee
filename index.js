@@ -131,6 +131,7 @@ const botCommands = {
 };
 
 async function sendHttpRequest(url, headers, data, method) {
+  console.log(url);
   return new Promise((resolve, reject) => {
     const options = {
       hostname: url.hostname,
@@ -139,7 +140,7 @@ async function sendHttpRequest(url, headers, data, method) {
     };
     options.method = method;
     options.headers = headers;
-
+    console.log(options);
     const req = https.request(options, (res) => {
       let answer = '';
       res.on('data', (data) => {
@@ -149,6 +150,7 @@ async function sendHttpRequest(url, headers, data, method) {
         resolve(answer);
       });
       res.on('error', () => {
+      	console.log('error');
         reject(answer);
       });
     });
@@ -214,7 +216,7 @@ const setWebHookUrl = new url.URL('https://api.telegram.org');
 setWebHookUrl.pathname = `bot${token}${CMD.setWebHook}`;
 setWebHookUrl.searchParams.append(
   'url',
-  'https://teleboteeee.herokuapp.com/674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc',
+  'https://teleboteeee.herokuapp.com/${token}',
 );
 
 sendHttpRequest(setWebHookUrl, {}, null, 'GET').then(Server);
