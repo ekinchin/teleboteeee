@@ -2,7 +2,6 @@ const http = require('http');
 const https = require('https');
 const url = require('url');
 const events = require('events');
-//const EventEmitter = require('events').EventEmitter;
 
 const eventer = new events.EventEmitter();
 
@@ -16,20 +15,20 @@ const token = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
 const telegramUrl = new url.URL('https://api.telegram.org');
 telegramUrl.pathname = `bot${token}/${CMD.sendMessage}`;
 
-async function sendHttpRequest(url, headers, data, method) {
+async function sendHttpRequest(urlReq, headers, dataReq, method) {
   return new Promise((resolve, reject) => {
     const options = {
-      hostname: url.hostname,
+      hostname: urlReq.hostname,
       port: 443,
-      path: url.pathname + url.search,
+      path: urlReq.pathname + urlReq.search,
     };
     options.method = method;
     options.headers = headers;
 
     const req = https.request(options, (res) => {
       let answer = '';
-      res.on('data', (data) => {
-        answer += data;
+      res.on('data', (dataRes) => {
+        answer += dataRes;
       });
       res.on('end', () => {
         resolve(answer);
@@ -41,7 +40,7 @@ async function sendHttpRequest(url, headers, data, method) {
     if (options.headers !== undefined) {
       if ('Content-Type' in options.headers) {
         if (options.headers['Content-Type'] === 'application/json') {
-          req.write(JSON.stringify(data));
+          req.write(JSON.stringify(dataReq));
         }
       }
     }
@@ -138,19 +137,17 @@ const botCommands = {
 };
 
 function reqParse(data) {
-  data = JSON.parse(data);
-  const text = data.message.text;
-  let entities = {};
-  (data.message.entities === undefined) ? null : entities = data.message.entities[0];
+  const dataParse = JSON.parse(data);
+  const entities = dataParse.message.entities[0] || '';
   if (entities.type === 'bot_command') {
-    switch (text.split(' ')[0].toLowerCase()) {
+    switch (dataParse.message.text.split(' ')[0].toLowerCase()) {
       case '/start':
       case '/help':
       case '/weather':
-        eventer.emit(text.split(' ')[0].toLowerCase(), data.message.chat.id, data);
+        eventer.emit(dataParse.message.text.split(' ')[0].toLowerCase(), dataParse.message.chat.id, dataParse);
         break;
       default:
-        eventer.emit('undefined', data.message.chat.id);
+        eventer.emit('undefined', dataParse.message.chat.id);
         break;
     }
   }
