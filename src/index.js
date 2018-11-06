@@ -1,8 +1,8 @@
 import { http } from 'http';
 import { https } from 'https';
-import { Url } from 'url';
+import { URL } from 'url';
 import { EventEmitter } from 'events';
-import { sendHttpRequest } from './httpRequest';
+import sendHttpRequest from './httpRequest';
 
 const eventer = new EventEmitter();
 
@@ -13,7 +13,8 @@ const CMD = {
 };
 
 const token = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
-const telegramUrl = new Url('https://api.telegram.org');
+const telegramUrl = new URL('https://api.telegram.org');
+console.log(telegramUrl);
 telegramUrl.pathname = `bot${token}/${CMD.sendMessage}`;
 
 async function sendHttpRequest_(urlReq, headers, dataReq, method) {
@@ -176,11 +177,10 @@ eventer.on('/help', botCommands['/help'].handler);
 eventer.on('undefined', botCommands.undefined.handler);
 
 
-const setWebHookUrl = new Url('https://api.telegram.org/');
+const setWebHookUrl = new URL('https://api.telegram.org/');
 setWebHookUrl.pathname = `bot${token}${CMD.setWebHook}`;
 setWebHookUrl.searchParams.append(
   'url',
   'https://teleboteeee.herokuapp.com/',
 );
-
 sendHttpRequest(setWebHookUrl, {}, null, 'GET').then(Server);
