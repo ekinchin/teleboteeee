@@ -157,6 +157,7 @@ function reqParse(data) {
 }
 
 async function Server() {
+	console.log(http);
   const server = http.createServer();
   server.listen(process.env.PORT);
   server.on('request', (request, response) => {
