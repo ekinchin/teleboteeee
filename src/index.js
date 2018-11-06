@@ -2,7 +2,7 @@ import { http } from 'http';
 import { https } from 'https';
 import { url } from 'url';
 import { events } from 'events';
-import { sendHttpRequest } from 'httpRequest';
+import { sendHttpRequest } from './httpRequest';
 
 const eventer = new events.EventEmitter();
 

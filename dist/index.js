@@ -8,7 +8,7 @@ var _url = require("url");
 
 var _events = require("events");
 
-var _httpRequest = require("httpRequest");
+var _httpRequest = require("./httpRequest");
 
 const eventer = new _events.events.EventEmitter();
 const CMD = {
