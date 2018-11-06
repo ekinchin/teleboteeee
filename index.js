@@ -68,7 +68,10 @@ const botCommands = {
   '/start': {
     descripion: 'Начать работу с ботом',
     handler: async (chatId, data) => {
+<<<<<<< HEAD
       console.log('/start');
+=======
+>>>>>>> remotes/origin/eslintfix
       const answer = `Hello, ${data.message.from.first_name}`;
       sendHttpRequest(
         telegramUrl,
@@ -81,7 +84,10 @@ const botCommands = {
   '/help': {
     descripion: 'Помощь',
     handler: async (chatId) => {
+<<<<<<< HEAD
       console.log('/help');
+=======
+>>>>>>> remotes/origin/eslintfix
       const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
       sendHttpRequest(
         telegramUrl,
