@@ -26,7 +26,7 @@ class Yandexmap {
         .GeoObject.metaDataProperty.GeocoderMetaData.text;
       [lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
     }
-    this.urlMap.searchParams.remove('geocode', city);
+    this.urlMap.searchParams.delete('geocode', city);
     return [cityParse || city, lon || 0, lat || 0];
   }
 }
