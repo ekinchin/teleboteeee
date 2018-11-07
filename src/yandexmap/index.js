@@ -11,12 +11,13 @@ class YandexMap {
 
   async getLocation(city) {
     this.urlMap.searchParams.append('geocode', city);
-    const geoLocation = await httpRequest(this.urlMap, {}, null, 'GET');
-    const geoLocationParse = JSON.parse(geoLocation);
-    const cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0]
+    const answer = await httpRequest(this.urlMap, {}, null, 'GET');
+    const answerParse = JSON.parse(answer);
+    const cityParse = answer.response.GeoObjectCollection.featureMember[0]
       .GeoObject.metaDataProperty.GeocoderMetaData.text || 0;
-    const [lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0]
-      .GeoObject.Point.pos.split(' ') || [0, 0];
+    const location = answer.response.GeoObjectCollection.featureMember[0]
+      .GeoObject.Point.pos || '';
+    const [lon, lat] = location.split(' ') || [0, 0];
     /*
     if (
       geoLocationParse.response.GeoObjectCollection
