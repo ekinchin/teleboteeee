@@ -2,7 +2,7 @@ import { URL } from 'url';
 import httpRequest from '../httpRequest';
 
 
-class Yandexmap {
+class YandexMap {
   constructor() {
     this.urlMap = new URL('https://geocode-maps.yandex.ru');
     this.urlMap.pathname = '/1.x/';
@@ -31,4 +31,4 @@ class Yandexmap {
   }
 }
 
-export default Yandexmap;
+export default YandexMap;
