@@ -16,41 +16,6 @@ const token = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
 const telegramUrl = new URL('https://api.telegram.org');
 telegramUrl.pathname = `bot${token}/${CMD.sendMessage}`;
 
-/*
-async function sendHttpRequest_(urlReq, headers, dataReq, method) {
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: urlReq.hostname,
-      port: 443,
-      path: urlReq.pathname + urlReq.search,
-    };
-    options.method = method;
-    options.headers = headers;
-
-    const req = https.request(options, (res) => {
-      let answer = '';
-      res.on('data', (dataRes) => {
-        answer += dataRes;
-      });
-      res.on('end', () => {
-        resolve(answer);
-      });
-      res.on('error', () => {
-        reject(answer);
-      });
-    });
-    if (options.headers !== undefined) {
-      if ('Content-Type' in options.headers) {
-        if (options.headers['Content-Type'] === 'application/json') {
-          req.write(JSON.stringify(dataReq));
-        }
-      }
-    }
-    req.end();
-  });
-}
-*/
-
 const yaApi = {
   getLocation: async (city) => {
     const geoUrl = new URL('https://geocode-maps.yandex.ru');
