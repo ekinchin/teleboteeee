@@ -14,13 +14,13 @@ class YandexMap {
     const answer = await httpRequest(this.urlMap, {}, null, 'GET');
     const answerParse = JSON.parse(answer);
     if (
-      geoLocationParse.response.GeoObjectCollection
+      answerParse.response.GeoObjectCollection
         .metaDataProperty.GeocoderResponseMetaData
         .found !== '0'
     ) {
-      cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0]
+      cityParse = answerParse.response.GeoObjectCollection.featureMember[0]
         .GeoObject.metaDataProperty.GeocoderMetaData.text;
-      [lon, lat] = geoLocationParse.response.GeoObjectCollection
+      [lon, lat] = answerParse.response.GeoObjectCollection
         .featureMember[0].GeoObject.Point.pos.split(' ');
     }
 
