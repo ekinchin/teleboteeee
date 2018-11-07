@@ -6,6 +6,8 @@ import YandexMap from './yandexmap';
 import YandexWeather from './yandexweather';
 
 const eventer = new EventEmitter();
+const map = new YandexMap();
+const weather = new YandexWeather('40f0e52b-168d-40a4-ba38-0c2bf4d98726');
 
 const CMD = {
   setWebHook: 'setWebhook',
@@ -16,9 +18,6 @@ const CMD = {
 const token = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
 const telegramUrl = new URL('https://api.telegram.org');
 telegramUrl.pathname = `bot${token}/${CMD.sendMessage}`;
-
-const map = new YandexMap();
-const weather = new YandexWeather('40f0e52b-168d-40a4-ba38-0c2bf4d98726');
 
 const botCommands = {
   '/start': {

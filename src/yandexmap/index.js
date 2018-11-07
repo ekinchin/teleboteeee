@@ -1,7 +1,6 @@
 import { URL } from 'url';
 import httpRequest from '../httpRequest';
 
-
 class YandexMap {
   constructor() {
     this.urlMap = new URL('https://geocode-maps.yandex.ru');
@@ -14,9 +13,11 @@ class YandexMap {
     this.urlMap.searchParams.append('geocode', city);
     const geoLocation = await httpRequest(this.urlMap, {}, null, 'GET');
     const geoLocationParse = JSON.parse(geoLocation);
-    let cityParse;
-    let lon;
-    let lat;
+    const cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0]
+      .GeoObject.metaDataProperty.GeocoderMetaData.text || 0;
+    const [lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0]
+      .GeoObject.Point.pos.split(' ') || [0, 0];
+    /*
     if (
       geoLocationParse.response.GeoObjectCollection
         .metaDataProperty.GeocoderResponseMetaData
@@ -24,10 +25,12 @@ class YandexMap {
     ) {
       cityParse = geoLocationParse.response.GeoObjectCollection.featureMember[0]
         .GeoObject.metaDataProperty.GeocoderMetaData.text;
-      [lon, lat] = geoLocationParse.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
+      [lon, lat] = geoLocationParse.response.GeoObjectCollection
+        .featureMember[0].GeoObject.Point.pos.split(' ');
     }
+    */
     this.urlMap.searchParams.delete('geocode', city);
-    return [cityParse || city, lon || 0, lat || 0];
+    return [cityParse, lon, lat];
   }
 }
 
