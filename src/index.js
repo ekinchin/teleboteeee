@@ -1,5 +1,5 @@
-import { http } from 'http';
-import { https } from 'https';
+import http from 'http';
+// import { https } from 'https';
 import { URL } from 'url';
 import { EventEmitter } from 'events';
 import sendHttpRequest from './httpRequest';
@@ -14,9 +14,9 @@ const CMD = {
 
 const token = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
 const telegramUrl = new URL('https://api.telegram.org');
-console.log(telegramUrl);
 telegramUrl.pathname = `bot${token}/${CMD.sendMessage}`;
 
+/*
 async function sendHttpRequest_(urlReq, headers, dataReq, method) {
   return new Promise((resolve, reject) => {
     const options = {
@@ -49,10 +49,11 @@ async function sendHttpRequest_(urlReq, headers, dataReq, method) {
     req.end();
   });
 }
+*/
 
 const yaApi = {
   getLocation: async (city) => {
-    const geoUrl = new url.URL('https://geocode-maps.yandex.ru');
+    const geoUrl = new URL('https://geocode-maps.yandex.ru');
     geoUrl.pathname = '/1.x/';
     geoUrl.searchParams.append('format', 'json');
     geoUrl.searchParams.append('results', '1');
@@ -75,7 +76,7 @@ const yaApi = {
     return [cityParse || city, lon || 0, lat || 0];
   },
   getWeather: async (lon, lat) => {
-    const weatherUrl = new url.URL('https://api.weather.yandex.ru');
+    const weatherUrl = new URL('https://api.weather.yandex.ru');
     weatherUrl.pathname = '/v1/informers';
     weatherUrl.searchParams.append('lang', 'ru_RU');
     weatherUrl.searchParams.append('lat', lat);
@@ -157,7 +158,7 @@ function reqParse(data) {
 }
 
 async function Server() {
-	console.log(http);
+  console.log(http);
   const server = http.createServer();
   server.listen(process.env.PORT);
   server.on('request', (request, response) => {
