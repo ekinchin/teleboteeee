@@ -1,8 +1,7 @@
 import http from 'http';
-// import { https } from 'https';
 import { URL } from 'url';
 import { EventEmitter } from 'events';
-import sendHttpRequest from './httpRequest';
+import httpRequest from './httpRequest';
 
 const eventer = new EventEmitter();
 
@@ -24,7 +23,7 @@ const yaApi = {
     geoUrl.searchParams.append('results', '1');
     geoUrl.searchParams.append('geocode', city);
 
-    const geoLocation = await sendHttpRequest(geoUrl, {}, null, 'GET');
+    const geoLocation = await httpRequest(geoUrl, {}, null, 'GET');
     const geoLocationParse = JSON.parse(geoLocation);
     let cityParse;
     let lon;
@@ -48,7 +47,7 @@ const yaApi = {
     weatherUrl.searchParams.append('lon', lon);
     const weatherHeader = { 'X-Yandex-API-Key': '40f0e52b-168d-40a4-ba38-0c2bf4d98726' };
 
-    let weather = await sendHttpRequest(weatherUrl, weatherHeader, null, 'GET');
+    let weather = await httpRequest(weatherUrl, weatherHeader, null, 'GET');
     weather = JSON.parse(weather);
     return [weather.fact.temp, weather.fact.feels_like, weather.fact.wind_speed];
   },
@@ -60,7 +59,7 @@ const botCommands = {
     handler:
     async (chatId, data) => {
       const answer = `Hello, ${data.message.from.first_name}`;
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
+      await httpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
     },
   },
   '/help': {
@@ -68,7 +67,7 @@ const botCommands = {
     handler:
     async (chatId) => {
       const answer = '/start - поздороваться\n/weather - текущая погода\n/help - эта справка';
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
+      await httpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
     },
   },
   '/weather': {
@@ -91,7 +90,7 @@ const botCommands = {
       } else {
         answer = 'Не удалось найти город';
       }
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
+      await httpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
     },
   },
   undefined: {
@@ -99,7 +98,7 @@ const botCommands = {
     handler:
     async (chatId) => {
       const answer = 'Неизвестная команда, воспользуйтесь справкой /help';
-      await sendHttpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
+      await httpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
     },
   },
 };
@@ -123,7 +122,6 @@ function reqParse(data) {
 }
 
 async function Server() {
-  console.log(http);
   const server = http.createServer();
   server.listen(process.env.PORT);
   server.on('request', (request, response) => {
@@ -150,4 +148,4 @@ setWebHookUrl.searchParams.append(
   'url',
   'https://teleboteeee.herokuapp.com/',
 );
-sendHttpRequest(setWebHookUrl, {}, null, 'GET').then(Server);
+httpRequest(setWebHookUrl, {}, null, 'GET').then(Server);

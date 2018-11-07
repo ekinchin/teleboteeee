@@ -1,3 +1,5 @@
+import httpRequest from './httpRequest'
+
 const yaApi = {
   getLocation: async (city) => {
     const geoUrl = new url.URL('https://geocode-maps.yandex.ru');
