@@ -13,9 +13,9 @@ class YandexMap {
     this.urlMap.searchParams.append('geocode', city);
     const answer = await httpRequest(this.urlMap, {}, null, 'GET');
     const answerParse = JSON.parse(answer);
-    const cityParse = answer.response.GeoObjectCollection.featureMember[0]
+    const cityParse = answerParse.response.GeoObjectCollection.featureMember[0]
       .GeoObject.metaDataProperty.GeocoderMetaData.text || 0;
-    const location = answer.response.GeoObjectCollection.featureMember[0]
+    const location = answerParse.response.GeoObjectCollection.featureMember[0]
       .GeoObject.Point.pos || '';
     const [lon, lat] = location.split(' ') || [0, 0];
     /*
