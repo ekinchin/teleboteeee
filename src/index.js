@@ -2,6 +2,7 @@ import http from 'http';
 import { URL } from 'url';
 import { EventEmitter } from 'events';
 import httpRequest from './httpRequest';
+import Yandexmap from './yandexmap';
 
 const eventer = new EventEmitter();
 
@@ -14,6 +15,8 @@ const CMD = {
 const token = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
 const telegramUrl = new URL('https://api.telegram.org');
 telegramUrl.pathname = `bot${token}/${CMD.sendMessage}`;
+
+const map = new Yandexmap();
 
 const yaApi = {
   getLocation: async (city) => {
@@ -79,7 +82,7 @@ const botCommands = {
       let lon = 65;
       let answer = '';
       if (data.message.text.split(' ')[1] !== undefined) {
-        [city, lon, lat] = await yaApi.getLocation(data.message.text.split(' ')[1]);
+        [city, lon, lat] = await map.getLocation(data.message.text.split(' ')[1]);
       }
       if (lon !== 0 || lat !== 0) {
         const [temp, tempFeel, wind] = await yaApi.getWeather(lon, lat);
