@@ -18,10 +18,12 @@ class YandexMap {
         .metaDataProperty.GeocoderResponseMetaData
         .found !== '0'
     ) {
-      cityParse = answerParse.response.GeoObjectCollection.featureMember[0]
+      const cityParse = answerParse.response.GeoObjectCollection.featureMember[0]
         .GeoObject.metaDataProperty.GeocoderMetaData.text;
-      [lon, lat] = answerParse.response.GeoObjectCollection
-        .featureMember[0].GeoObject.Point.pos.split(' ');
+      const lon = answerParse.response.GeoObjectCollection
+        .featureMember[0].GeoObject.Point.pos.split(' ')[0];
+      const lat = answerParse.response.GeoObjectCollection
+        .featureMember[0].GeoObject.Point.pos.split(' ')[1];
     }
 
     this.urlMap.searchParams.delete('geocode', city);
