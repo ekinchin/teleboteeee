@@ -1,13 +1,14 @@
 import http from 'http';
 import { URL } from 'url';
 import { EventEmitter } from 'events';
+import { telegramToken, yandexWeatherToken } from './keys';
 import httpRequest from './httpRequest';
 import YandexMap from './yandexmap';
 import YandexWeather from './yandexweather';
 
 const eventer = new EventEmitter();
 const map = new YandexMap();
-const weather = new YandexWeather('40f0e52b-168d-40a4-ba38-0c2bf4d98726');
+const weather = new YandexWeather(yandexWeatherToken);
 
 const CMD = {
   setWebHook: 'setWebhook',
@@ -15,9 +16,8 @@ const CMD = {
   sendMessage: 'sendMessage',
 };
 
-const token = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
 const telegramUrl = new URL('https://api.telegram.org');
-telegramUrl.pathname = `bot${token}/${CMD.sendMessage}`;
+telegramUrl.pathname = `bot${telegramToken}/${CMD.sendMessage}`;
 
 const botCommands = {
   '/start': {
@@ -109,7 +109,7 @@ eventer.on('undefined', botCommands.undefined.handler);
 
 
 const setWebHookUrl = new URL('https://api.telegram.org/');
-setWebHookUrl.pathname = `bot${token}${CMD.setWebHook}`;
+setWebHookUrl.pathname = `bot${telegramToken}${CMD.setWebHook}`;
 setWebHookUrl.searchParams.append(
   'url',
   'https://teleboteeee.herokuapp.com/',
