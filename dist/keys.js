@@ -1,0 +1,11 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.telegramToken = exports.yandexWeatherToken = void 0;
+const yandexWeatherToken = '40f0e52b-168d-40a4-ba38-0c2bf4d98726';
+exports.yandexWeatherToken = yandexWeatherToken;
+const telegramToken = '674082318:AAG4e5AXQu_SbJkYSVji4chwaiggtGrMLBc';
+exports.telegramToken = telegramToken;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9rZXlzLmpzIl0sIm5hbWVzIjpbInlhbmRleFdlYXRoZXJUb2tlbiIsInRlbGVncmFtVG9rZW4iXSwibWFwcGluZ3MiOiI7Ozs7OztBQUFPLE1BQU1BLGtCQUFrQixHQUFHLHNDQUEzQjs7QUFDQSxNQUFNQyxhQUFhLEdBQUcsK0NBQXRCIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGNvbnN0IHlhbmRleFdlYXRoZXJUb2tlbiA9ICc0MGYwZTUyYi0xNjhkLTQwYTQtYmEzOC0wYzJiZjRkOTg3MjYnO1xuZXhwb3J0IGNvbnN0IHRlbGVncmFtVG9rZW4gPSAnNjc0MDgyMzE4OkFBRzRlNUFYUXVfU2JKa1lTVmppNGNod2FpZ2d0R3JNTEJjJztcbiJdfQ==
