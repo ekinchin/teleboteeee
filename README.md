@@ -1,3 +1,3 @@
 # teleBot
 
-my education project
+Учебный проект бота для Телеграма.
