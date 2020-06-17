@@ -1,2 +1,1 @@
-export const yandexWeatherToken = '*****';
-export const telegramToken = '*****';
+export const { tlgrm_token, weather_token } = process.env;
