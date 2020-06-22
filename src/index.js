@@ -1,7 +1,7 @@
-import http from 'http';
+import https from 'https';
 import { URL } from 'url';
 import { EventEmitter } from 'events';
-import { tlgrm_token, yandexWeatherToken as weather_token } from './keys';
+import { tlgrm_token, weather_token, key, cert, ca, port } from './keys';
 import httpRequest from './httpRequest';
 import YandexMap from './yandexmap';
 import YandexWeather from './yandexweather';
@@ -88,8 +88,10 @@ function reqParse(data) {
 }
 
 async function Server() {
-  const server = http.createServer();
-  server.listen(process.env.PORT);
+  const server = https.createServer({ key: key,
+    cert: cert,
+  ca: ca });
+  server.listen(port);
   server.on('request', (request, response) => {
     let requestData = '';
     request.on('data', (data) => {
@@ -109,9 +111,17 @@ eventer.on('undefined', botCommands.undefined.handler);
 
 
 const setWebHookUrl = new URL('https://api.telegram.org/');
-setWebHookUrl.pathname = `bot${tlgrm_token}${CMD.setWebHook}`;
+setWebHookUrl.pathname = `bot${tlgrm_token}/${CMD.setWebHook}`;
 setWebHookUrl.searchParams.append(
   'url',
-  'https://teleboteeee.herokuapp.com/',
+  'https://storage.ekinchin.ru/',
 );
-httpRequest(setWebHookUrl, {}, null, 'GET').then(Server);
+// setWebHookUrl.searchParams.append(
+//  'certificate',
+//  public_key,
+// );
+
+httpRequest(setWebHookUrl, {}, 'GET').then((resolve)=>{
+  console.log(resolve);
+  Server();
+});
