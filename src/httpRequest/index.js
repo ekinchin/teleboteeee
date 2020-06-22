@@ -15,9 +15,11 @@ const httpRequest = async (url, headers, data, method) => new Promise((resolve, 
       answer += dataRes;
     });
     res.on('end', () => {
-      resolve(answer);
+      const { ok } = JSON.parse(answer);
+      ok ? resolve (answer) : reject (answer);
     });
     res.on('error', () => {
+      console.log('reject', answer);
       reject(answer);
     });
   });
