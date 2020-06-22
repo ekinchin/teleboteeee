@@ -25,6 +25,7 @@
     "eslint-plugin-import": "^2.21.2"
   },
   "dependencies": {
+    "babel-eslint": "^10.1.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-flowtype": "^5.1.3"
