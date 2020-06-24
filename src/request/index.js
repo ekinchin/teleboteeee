@@ -1,7 +1,7 @@
 import https from 'https';
 import querystring from 'querystring';
 
-const request = (url, options, data, resolve, reject) => {
+const requestBase = (url, options, data, resolve, reject) => {
   const req = https.request(url, options, (res) => {
     let answer = '';
     res.on('data', (dataRes) => {
@@ -21,14 +21,14 @@ const request = (url, options, data, resolve, reject) => {
   req.end();
 };
 
-const generate = (url, headers, method, data) => {
+const request = (url, headers, method, data) => {
   const options = {
     headers,
     method,
   };
   return (newData = data, newUrl = url) => new Promise(
-    (resolve, reject) => request(newUrl, options, newData, resolve, reject)
+    (resolve, reject) => requestBase(newUrl, options, newData, resolve, reject),
   );
 };
 
-export default generate;
+export default request;
