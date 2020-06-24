@@ -14,19 +14,21 @@ const request = (url, options, data, resolve, reject) => {
       reject(e);
     });
   });
-  if(data) {
+  if (data) {
     const postData = querystring.stringify(data);
     req.write(postData);
   }
   req.end();
-}
+};
 
-const construct = (url, headers, method, data) => {
+const generate = (url, headers, method, data) => {
   const options = {
     headers,
     method,
-  }
-  return (newData=data, newUrl=url) => new Promise((resolve, reject) => request(newUrl, options, newData, resolve, reject));
-}
+  };
+  return (newData = data, newUrl = url) => new Promise(
+    (resolve, reject) => request(newUrl, options, newData, resolve, reject)
+  );
+};
 
-export default construct;
+export default generate;
