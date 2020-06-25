@@ -63,6 +63,6 @@ const connect = async (serverUrl) => {
 //   .catch((err) => { console.log(err); });
 
 
-export default {
+export {
   getWebhookInfo, setWebhook, sendMessage, connect,
 };
