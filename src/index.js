@@ -102,7 +102,6 @@ server.on('request', (request, response) => {
   });
 });
 server.on('listening', async () => {
-  console.log(`server listenong on ${PORT} port`);
   const result = await connect('https://storage.ekinchin.ru:8443');
   console.log(result);
 });
