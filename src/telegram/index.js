@@ -45,7 +45,7 @@ const connect = async (serverUrl) => {
     return Error(error);
   }
   const { result } = parsed;
-  const { url } = parsed;
+  const { url } = result;
   if (url === serverUrl) {
     return result;
   }
