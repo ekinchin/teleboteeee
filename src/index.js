@@ -2,7 +2,7 @@ import https from 'https';
 // import { URL } from 'url';
 // import { EventEmitter } from 'events';
 import {
-  key, cert, ca, PORT,
+  key, cert, ca, PORT, HOSTNAME,
 } from './keys';
 import { connect } from './telegram';
 
@@ -102,7 +102,7 @@ server.on('request', (request, response) => {
   });
 });
 server.on('listening', async () => {
-  const result = await connect('https://storage.ekinchin.ru:8443');
+  const result = await connect(`${HOSTNAME}:${PORT}`);
   console.log(result);
 });
 
@@ -111,20 +111,3 @@ server.on('listening', async () => {
 // eventer.on('/start', botCommands['/start'].handler);
 // eventer.on('/help', botCommands['/help'].handler);
 // eventer.on('undefined', botCommands.undefined.handler);
-
-
-// const setWebHookUrl = new URL('https://api.telegram.org/');
-// setWebHookUrl.pathname = `bot${TELEGRAM_TOKEN}/${CMD.setWebHook}`;
-// setWebHookUrl.searchParams.append(
-//   'url',
-//   'https://storage.ekinchin.ru/',
-// );
-// // setWebHookUrl.searchParams.append(
-// //  'certificate',
-// //  public_key,
-// // );
-
-// httpRequest(setWebHookUrl, {}, 'GET').then((resolve) => {
-//   console.log(resolve);
-//   Server();
-// });
