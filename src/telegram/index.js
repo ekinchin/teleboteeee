@@ -33,7 +33,7 @@ const sendMessage = async (chat_id, text) => {
     text,
   };
   if (!chat_id || !text) return Error('undefined parameters');
-  return request(telegramUrl, headers, 'POST', data, 'POST')();
+  return request(telegramUrl, headers, 'POST', JSON.stringify(data))();
 };
 
 const connect = async (serverUrl) => {
