@@ -1,8 +1,10 @@
-//   '/start': {
-//     descripion: 'Начать работу с ботом',
-//     handler:
-//     async (chatId, data) => {
-//       const answer = `Hello, ${data.message.from.first_name}`;
-//       await httpRequest(telegramUrl, { 'Content-Type': 'application/json' }, { method: CMD.sendMessage, chat_id: chatId, text: answer }, 'POST');
-//     },
-//   },
+import { sendMessage } from '../telegram';
+
+export default {
+  descripion: 'Приветствие от бота',
+  run: async (payload) => {
+    const answer = `Hello, ${payload.from.first_name}`;
+    const result = await sendMessage(payload.chat.id, answer);
+    return result;
+  },
+};
