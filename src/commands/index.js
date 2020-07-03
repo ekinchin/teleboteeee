@@ -16,4 +16,4 @@ const commandsLoad = () => {
 };
 
 const commands = commandsLoad();
-export default (command, payload) => (command in commands ? commands[command](payload) : commands['/undefined']());
+export default (command, payload) => (command in commands ? commands[command].run(payload) : commands['/undefined']());
