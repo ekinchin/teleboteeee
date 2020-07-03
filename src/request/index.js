@@ -1,5 +1,4 @@
 import https from 'https';
-import querystring from 'querystring';
 
 const requestBase = (url, options, data, resolve, reject) => {
   const req = https.request(url, options, (res) => {
@@ -15,8 +14,7 @@ const requestBase = (url, options, data, resolve, reject) => {
     });
   });
   if (data) {
-    const postData = querystring.stringify(data);
-    req.write(postData);
+    req.write(data);
   }
   req.end();
 };
