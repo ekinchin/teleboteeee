@@ -16,6 +16,7 @@ server.listen(PORT);
 
 server.on('listening', async () => {
   const result = await connect(`${HOSTNAME}:${PORT}/${TELEGRAM_TOKEN}`);
+  // eslint-disable-next-line no-console
   console.log(result);
 });
 
@@ -27,8 +28,7 @@ server.on('request', (request, response) => {
   request.on('end', () => {
     if (request.url === `/${TELEGRAM_TOKEN}`) {
       const { command, ...payload } = parse(data);
-      const result = commands(command, payload);
-      console.log(result);
+      commands(command, payload);
     } else {
       response.setHeader('Content-Type', 'text/html');
       response.write('<h1>404<br>Page not found</h1>');
