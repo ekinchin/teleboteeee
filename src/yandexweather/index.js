@@ -1,23 +1,18 @@
 import { URL } from 'url';
-import httpRequest from '../httpRequest';
+import request from '../request';
 
-class YandexWeather {
-  constructor(token) {
-    this.urlWeather = new URL('https://api.weather.yandex.ru');
-    this.urlWeather.pathname = '/v1/informers';
-    this.urlWeather.searchParams.append('lang', 'ru_RU');
-    this.headerWeather = { 'X-Yandex-API-Key': token };
-  }
+const { WEATHER_TOKEN } = process.env;
+const WWWWEATHER = 'https://api.weather.yandex.ru';
 
-  async getWeather(lon, lat) {
-    this.urlWeather.searchParams.append('lat', lat);
-    this.urlWeather.searchParams.append('lon', lon);
-    let weather = await httpRequest(this.urlWeather, this.headerWeather, null, 'GET');
-    weather = JSON.parse(weather);
-    this.urlWeather.searchParams.delete('lat', lat);
-    this.urlWeather.searchParams.delete('lon', lon);
-    return [weather.fact.temp, weather.fact.feels_like, weather.fact.wind_speed];
-  }
-}
+const getWeather = async (lat, lon) => {
+  const url = new URL(WWWWEATHER);
+  url.pathname = 'v2/informers';
+  url.searchParams.append('lang', 'ru_RU');
+  url.searchParams.append('lat', lat);
+  url.searchParams.append('lon', lon);
+  const headers = { 'X-Yandex-API-Key': WEATHER_TOKEN };
+  const answer = await request(url, headers, 'GET')();
+  return JSON.parse(answer);
+};
 
-export default YandexWeather;
+export default getWeather;
