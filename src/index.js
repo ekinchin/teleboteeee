@@ -3,7 +3,6 @@ import {
   key, cert, ca, PORT, HOSTNAME, TELEGRAM_TOKEN,
 } from './keys';
 import { connect } from './telegram';
-import parse from './parser';
 import commands from './commands';
 
 const server = https.createServer({
@@ -27,8 +26,7 @@ server.on('request', (request, response) => {
   });
   request.on('end', () => {
     if (request.url === `/${TELEGRAM_TOKEN}`) {
-      const { command, ...payload } = parse(data);
-      commands(command, payload);
+      commands(data);
     } else {
       response.setHeader('Content-Type', 'text/html');
       response.write('<h1>404<br>Page not found</h1>');
