@@ -15,5 +15,61 @@ const commandsLoad = () => {
   }, {});
 };
 
+const context = new Map();
+
+const getContext = (chatId) => {
+  if (context.has(chatId)) {
+    return context.get(chatId);
+  }
+  return {
+    lastCommand: undefined,
+    commandDone: false,
+  };
+};
+
 const commands = commandsLoad();
-export default (command, payload) => (command in commands ? commands[command].run(payload) : commands['/undefined'].run(payload));
+
+function parser(data) {
+  let dataParse = {};
+  try {
+    dataParse = JSON.parse(data);
+  } catch {
+    return Error('Invalid data');
+  }
+  const { message } = dataParse;
+  const { entities } = message || undefined;
+  const { type } = entities ? entities[0] : { undefined };
+  const { chat } = message || undefined;
+  const { from } = message || undefined;
+  const { text } = message || undefined;
+  const { location } = message || undefined;
+  const command = type === 'bot_command' ? text.split(' ')[0].toLowerCase() : undefined;
+  return {
+    command,
+    chat,
+    from,
+    text,
+    location,
+  };
+}
+
+const dispatch = async (data) => {
+  const { command, ...payload } = parser(data);
+  const contextId = getContext(payload.chat.id);
+  const { lastCommand, commandDone } = contextId;
+  let runCommand = '';
+  if (command in commands) {
+    runCommand = command;
+  } else if (!command && !commandDone) {
+    runCommand = lastCommand;
+  } else {
+    runCommand = '/undefined';
+  }
+  const result = await commands[runCommand].run(payload, contextId);
+  context.set(payload.chat.id, {
+    lastCommand: runCommand,
+    ...result,
+  });
+};
+
+export default dispatch;
