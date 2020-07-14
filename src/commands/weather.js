@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { sendMessage } from '../telegram';
 import getWeather from '../yandexweather';
 
@@ -36,7 +35,6 @@ const weatherRequest = async (chatId, lat, lon) => {
   let answer = '';
   if (lat && lon) {
     const weather = await getWeather(lat, lon);
-    console.log(weather);
     const { fact } = weather;
     // eslint-disable-next-line camelcase
     const { temp, feels_like, wind_speed } = fact;
