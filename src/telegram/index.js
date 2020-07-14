@@ -21,7 +21,7 @@ const setWebhook = async (url) => {
   return request(telegramUrl, {}, 'GET')();
 };
 
-const sendMessage = async (chat_id, text) => {
+const sendMessage = async (chat_id, text, reply_markup) => {
   const telegramUrl = new URL(WWWTELEGRAM);
   telegramUrl.pathname = `bot${TELEGRAM_TOKEN}/sendMessage`;
   const headers = {
@@ -31,6 +31,7 @@ const sendMessage = async (chat_id, text) => {
     method: 'sendMessage',
     chat_id,
     text,
+    reply_markup,
   };
   if (!chat_id || !text) return Error('undefined parameters');
   return request(telegramUrl, headers, 'POST', JSON.stringify(data))();
