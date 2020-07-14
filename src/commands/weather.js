@@ -1,46 +1,79 @@
+/* eslint-disable no-console */
 import { sendMessage } from '../telegram';
+import getWeather from '../yandexweather';
 
-export default {
-  descripion: 'Погода',
-  run: async (payload) => {
-    const answer = 'В настоящий момент команда не работает';
-    const result = await sendMessage(payload.chat.id, answer);
-    return result;
-  },
+const commandState = {
+  ready: 'READY',
+  waitLocation: 'WAITING_LOCATION',
+  waitWeather: 'WAITING_WEATHER',
 };
 
-// import { URL } from 'url';
-// import request from '../httpRequest';
-// import YandexMap from '../yandexmap';
-// import YandexWeather from '../yandexweather';
-
-// const { TELEGRAM_TOKEN, WEATHER_TOKEN } = process.env;
-
-// const telegramUrl = new URL('https://api.telegram.org');
-// telegramUrl.pathname = `bot${TELEGRAM_TOKEN}/sendMessage`;
-
-// const map = new YandexMap();
-// const weather = new YandexWeather(WEATHER_TOKEN);
-
-// export default {
-//   descripion: 'Погода',
-//   handler: async (chatId, data) => {
-//     let city = 'Tyumen';
-//     let lat = 57;
-//     let lon = 65;
-//     let answer = '';
-//     if (data.message.text.split(' ')[1] !== undefined) {
-//       [city, lon, lat] = await map.getLocation(data.message.text.split(' ')[1]);
-//     }
-//     if (lon !== 0 || lat !== 0) {
-//       const [temp, tempFeel, wind] = await weather.getWeather(lon, lat);
-//       answer = `Погода в: ${city}\n`
-//         + `Текущая температура: ${temp}\n`
-//         + `Ощущается как: ${tempFeel}\n`
-//         + `Ветер: ${wind}`;
-//     } else {
-//       answer = 'Не удалось найти город';
-//     }
-//     await request(telegramUrl, { 'Content-Type': 'application/json' }, { method: 'sendMessage', chat_id: chatId, text: answer }, 'POST');
-//   },
+// {
+//   chat: chatId,
+//   state: undefined,
+//   lastCommand: undefined,
+//   commandDone: true,
 // };
+
+const locationRequest = async (payload) => {
+  // eslint-disable-next-line camelcase
+  const reply_markup = {
+    keyboard: [[{
+      text: 'отдайте координаты',
+      request_location: true,
+      request_contact: false,
+    }, {
+      text: 'не отдам!',
+      request_location: false,
+      request_contact: false,
+    }]],
+  };
+  const result = await sendMessage(payload.chat.id, 'Запрос местоположения', reply_markup);
+  return result;
+};
+
+const weatherRequest = async (chatId, lat, lon) => {
+  let answer = '';
+  if (lat && lon) {
+    const weather = await getWeather(lat, lon);
+    console.log(weather);
+    const { fact } = weather;
+    // eslint-disable-next-line camelcase
+    const { temp, feels_like, wind_speed } = fact;
+    // eslint-disable-next-line camelcase
+    answer = `Текущая температура ${temp}, ощущается как ${feels_like}, скорость ветра ${wind_speed}`;
+  } else {
+    answer = 'Без координат не получится узнать погоду';
+  }
+  const result = await sendMessage(chatId, answer);
+  return result;
+};
+
+const init = () => ({
+  descripion: 'Погода',
+  run: async (payload, context) => {
+    const { state } = context;
+    const { location } = payload;
+    const { latitude, longitude } = location || { undefined };
+    switch (state) {
+      case commandState.ready:
+      case undefined:
+        await locationRequest(payload);
+        return {
+          state: commandState.waitLocation,
+          commandDone: false,
+        };
+      case commandState.waitLocation:
+        await weatherRequest(payload.chat.id, latitude, longitude);
+        break;
+      default:
+        break;
+    }
+    return {
+      state: commandState.ready,
+      commandDone: true,
+    };
+  },
+});
+
+export default init();
