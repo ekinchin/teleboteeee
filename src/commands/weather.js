@@ -7,13 +7,6 @@ const commandState = {
   waitWeather: 'WAITING_WEATHER',
 };
 
-// {
-//   chat: chatId,
-//   state: undefined,
-//   lastCommand: undefined,
-//   commandDone: true,
-// };
-
 const locationRequest = async (payload) => {
   // eslint-disable-next-line camelcase
   const reply_markup = {
@@ -50,7 +43,7 @@ const weatherRequest = async (chatId, lat, lon) => {
 const init = () => ({
   descripion: 'Погода',
   run: async (payload, context) => {
-    const { state } = context;
+    const { state, ...prevContext } = context;
     const { location } = payload;
     const { latitude, longitude } = location || { undefined };
     switch (state) {
@@ -58,6 +51,7 @@ const init = () => ({
       case undefined:
         await locationRequest(payload);
         return {
+          ...prevContext,
           state: commandState.waitLocation,
           commandDone: false,
         };
@@ -68,6 +62,7 @@ const init = () => ({
         break;
     }
     return {
+      ...prevContext,
       state: commandState.ready,
       commandDone: true,
     };

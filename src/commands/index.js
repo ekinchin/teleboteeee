@@ -22,8 +22,9 @@ const getContext = (chatId) => {
     return context.get(chatId);
   }
   return {
-    lastCommand: undefined,
-    commandDone: false,
+    currentCommand: undefined,
+    prevCommand: undefined,
+    commandDone: true,
   };
 };
 
@@ -53,21 +54,42 @@ function parser(data) {
   };
 }
 
+const getCommand = (command, { prevCommand, commandDone, ...payload }) => {
+  // получена новая  команда - сбросить контекст, вернуть новую команду
+  if (command in commands) {
+    return {
+      currentCommand: command,
+      prevCommand: undefined,
+      commandDone: true,
+    };
+  }
+
+  // получено сообщение не команда и предыдущая команда не была завершена.
+  // Вернуть незавершенную команду, сохранить контекст
+  if (!command && !commandDone) {
+    return {
+      currentCommand: prevCommand,
+      prevCommand,
+      commandDone: false,
+      ...payload,
+    };
+  }
+  // получена не команда и нет незавершенных команд. Вернуть команду undefined, сбросить контекст
+  return {
+    currentCommand: '/undefined',
+    prevCommand: undefined,
+    commandDone: true,
+  };
+};
+
 const dispatch = async (data) => {
   const { command, ...payload } = parser(data);
-  const contextId = getContext(payload.chat.id);
-  const { lastCommand, commandDone } = contextId;
-  let runCommand = '';
-  if (command in commands) {
-    runCommand = command;
-  } else if (!command && !commandDone) {
-    runCommand = lastCommand;
-  } else {
-    runCommand = '/undefined';
-  }
-  const result = await commands[runCommand].run(payload, contextId);
+  const prevContext = getContext(payload.chat.id);
+  const currentContext = getCommand(command, prevContext);
+  const { currentCommand } = currentContext;
+  const result = await commands[currentCommand].run(payload, currentContext);
   context.set(payload.chat.id, {
-    lastCommand: runCommand,
+    lastCommand: currentCommand,
     ...result,
   });
 };
