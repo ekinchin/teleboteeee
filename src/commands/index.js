@@ -53,7 +53,7 @@ const getCommand = (command, { prevCommand, commandDone, ...payload }) => {
   if (command in commands) {
     return {
       currentCommand: command,
-      prevCommand: undefined,
+      prevCommand,
       commandDone: true,
     };
   }
@@ -62,10 +62,10 @@ const getCommand = (command, { prevCommand, commandDone, ...payload }) => {
   // Вернуть незавершенную команду, сохранить контекст
   if (!command && !commandDone) {
     return {
+      ...payload,
       currentCommand: prevCommand,
       prevCommand,
       commandDone: false,
-      ...payload,
     };
   }
   // получена не команда и нет незавершенных команд. Вернуть команду undefined, сбросить контекст
@@ -84,7 +84,7 @@ const dispatch = async (data) => {
   const result = await commands[currentCommand].run(payload, currentContext);
   context.set(payload.chat.id, {
     ...result,
-    lastCommand: currentCommand,
+    prevCommand: currentCommand,
   });
 };
 
