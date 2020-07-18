@@ -17,7 +17,7 @@ const commandsLoad = () => {
 
 const context = new Map();
 
-const getContext = (chatId) => {
+const restoreContext = (chatId) => {
   if (context.has(chatId)) {
     return context.get(chatId);
   }
@@ -40,17 +40,11 @@ function parser(data) {
   const { message } = dataParse;
   const { entities } = message || undefined;
   const { type } = entities ? entities[0] : { undefined };
-  const { chat } = message || undefined;
-  const { from } = message || undefined;
   const { text } = message || undefined;
-  const { location } = message || undefined;
   const command = type === 'bot_command' ? text.split(' ')[0].toLowerCase() : undefined;
   return {
     command,
-    chat,
-    from,
-    text,
-    location,
+    ...message,
   };
 }
 
@@ -84,13 +78,13 @@ const getCommand = (command, { prevCommand, commandDone, ...payload }) => {
 
 const dispatch = async (data) => {
   const { command, ...payload } = parser(data);
-  const prevContext = getContext(payload.chat.id);
+  const prevContext = restoreContext(payload.chat.id);
   const currentContext = getCommand(command, prevContext);
   const { currentCommand } = currentContext;
   const result = await commands[currentCommand].run(payload, currentContext);
   context.set(payload.chat.id, {
-    lastCommand: currentCommand,
     ...result,
+    lastCommand: currentCommand,
   });
 };
 
