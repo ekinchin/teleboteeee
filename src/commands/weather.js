@@ -10,15 +10,18 @@ const commandState = {
 const locationRequest = async (payload) => {
   // eslint-disable-next-line camelcase
   const reply_markup = {
-    keyboard: [[{
-      text: 'отдайте координаты',
-      request_location: true,
-      request_contact: false,
-    }, {
-      text: 'не отдам!',
-      request_location: false,
-      request_contact: false,
-    }]],
+    reply_markup: {
+      keyboard: [[{
+        text: 'отдайте координаты',
+        request_location: true,
+        request_contact: false,
+      }, {
+        text: 'не отдам!',
+        request_location: false,
+        request_contact: false,
+      }]],
+      one_time_keyboard: true,
+    },
   };
   const result = await sendMessage(payload.chat.id, 'Запрос местоположения', reply_markup);
   return result;
