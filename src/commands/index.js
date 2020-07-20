@@ -96,9 +96,12 @@ const dispatch = async (data) => {
   const currentContext = getCommand(command, prevContext);
   const { currentCommand } = currentContext;
   const result = await commands[currentCommand].run(payload, currentContext);
+  const { commandDone } = result;
   context.set(payload.chat.id, {
     ...result,
     prevCommand: currentCommand,
+    currentCommand: undefined,
+    commandDone: commandDone !== undefined ? commandDone : true,
   });
 };
 
