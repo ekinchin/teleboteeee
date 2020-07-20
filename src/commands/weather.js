@@ -44,7 +44,7 @@ const weatherRequest = async (chatId, lat, lon) => {
 };
 
 const init = () => ({
-  descripion: 'Погода',
+  description: 'Погода',
   run: async (payload, context) => {
     const { state, ...prevContext } = context;
     const { location } = payload;
