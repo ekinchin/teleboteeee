@@ -65,5 +65,5 @@ const connect = async (serverUrl) => {
 
 
 export {
-  getWebhookInfo, setWebhook, sendMessage, connect,
+  sendMessage, connect,
 };
